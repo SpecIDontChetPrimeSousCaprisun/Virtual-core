@@ -48,7 +48,7 @@ void Player::update() {
   );
 
   Object* resultR = Object::raycast(
-    currentPlayer->position + glm::vec2(currentPlayer->size.x, currentPlayer->size.y),
+    currentPlayer->position + glm::vec2(currentPlayer->size.x - 0.1f, currentPlayer->size.y),
     glm::vec2(0.0f, 0.5f),
     hitPoint,
     tHit,
@@ -56,14 +56,30 @@ void Player::update() {
   );
 
   Object* resultL = Object::raycast(
-    currentPlayer->position + glm::vec2(0.0f, currentPlayer->size.y),
+    currentPlayer->position + glm::vec2(0.1f, currentPlayer->size.y),
     glm::vec2(0.0f, 0.5f),
     hitPoint,
     tHit,
     ignore
   );
 
-  if (glfwGetKey(Window::window, GLFW_KEY_SPACE) == GLFW_PRESS && (result || resultR || resultL) && currentPlayer->state != "jumping") {
+  Object* resultWallRight = Object::raycast(
+    currentPlayer->position + glm::vec2(currentPlayer->size.x, currentPlayer->size.y - 0.1f),
+    glm::vec2(0.5f, 0.0f),
+    hitPoint,
+    tHit,
+    ignore
+  );
+
+  Object* resultWallLeft = Object::raycast(
+    currentPlayer->position  + glm::vec2(0.0f, currentPlayer->size.y - 0.1f),
+    glm::vec2(-0.5f, 0.0f),
+    hitPoint,
+    tHit,
+    ignore
+  );
+
+  if (glfwGetKey(Window::window, GLFW_KEY_SPACE) == GLFW_PRESS && (result || resultR || resultL) && currentPlayer->state == "idle") {
     currentPlayer->linearVelocity = glm::normalize(currentPlayer->lastCorrection) * 500.0f;
     currentPlayer->lastJump = 1.0f;
     currentPlayer->state = "jumping";
@@ -74,16 +90,50 @@ void Player::update() {
     Sound::playSound("sfx/jump.wav");
     Particle::createParticles(particlePos, glm::vec2(25.0f, 25.0f), 0.5f, "textures/Wallpaper.jpeg", glm::vec2(0.0f, -100.0f), 100.0f, 1.0f, 10);
   } else if ((!(result || resultR || resultL) || currentPlayer->lastJump <= 0.0f) && currentPlayer->state == "jumping") {
+    currentPlayer->state = "idle"; 
+  } else if ((resultWallRight || resultWallLeft) && !(result || resultR || resultL) && currentPlayer->state != "wallJumping" && currentPlayer->lastJump <= 0.0f) {
+    Object* wall;
+    float wallDir;
+
+    if (resultWallRight != nullptr) {
+      wall = resultWallRight;
+      wallDir = 1.0f;
+    } else {
+      wall = resultWallLeft;
+      wallDir = 0.0f;
+    }
+
+    currentPlayer->state = "wallJumping";
+    currentPlayer->gravity = 0.0f;
+    currentPlayer->linearVelocity = glm::vec2(0.0f, 100.0f);
+  } else if (currentPlayer->state == "wallJumping" && ((result || resultR || resultL) || !(resultWallRight || resultWallLeft))) {
     currentPlayer->state = "idle";
+    currentPlayer->gravity = 500.0f;
+  } else if (currentPlayer->state == "wallJumping" && glfwGetKey(Window::window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    Object* wall = resultWallLeft;
+    float wallDir = 1.0f;
+
+    if (resultWallRight != nullptr) {
+      wall = resultWallRight;
+      wallDir = -1.0f;
+    }
+
+    currentPlayer->state = "jumping";
+    currentPlayer->lastJump = 1.0f;
+    currentPlayer->gravity = 500.0f;
+    currentPlayer->linearVelocity = glm::vec2(wallDir, -3.0f) * 150.0f;
+    currentPlayer->position.x += currentPlayer->linearVelocity.x * Window::deltaTime;
+  } else if (result || resultR || resultL) {
+    currentPlayer->linearVelocity.x = 0.0f;
   }
 
   currentPlayer->lastJump -= Window::deltaTime;
 
-  if (glfwGetKey(Window::window, GLFW_KEY_D) == GLFW_PRESS) {
+  if (glfwGetKey(Window::window, GLFW_KEY_D) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
     currentPlayer->linearVelocity.x = 250.0f;
-  } else if (glfwGetKey(Window::window, GLFW_KEY_A) == GLFW_PRESS) {
+  } else if (glfwGetKey(Window::window, GLFW_KEY_A) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
     currentPlayer->linearVelocity.x = -250.0f;
-  } else {
+  } else if (currentPlayer->state != "wallJumping" && (currentPlayer->linearVelocity.x == -250.0f || currentPlayer->linearVelocity.x == 250.0f)) {
     currentPlayer->linearVelocity.x = 0.0f;
   }
 
@@ -112,7 +162,7 @@ void Player::setHealth(float health) {
 
 void Player::beforeUpdate() {
   colorChange.x = std::max(
-        colorChange.x - (float)Window::deltaTime,
-        0.0f
-    );
+      colorChange.x - (float)Window::deltaTime,
+      0.0f
+  );
 }

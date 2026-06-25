@@ -35,7 +35,7 @@ int main() {
   obj2->registerObject();
 
   platform->canCollide = true;
-  platform->rotation = 15;
+  //platform->rotation = 15;
   platform->registerObject();
 
   background->parallaxFactor = 5.0f;

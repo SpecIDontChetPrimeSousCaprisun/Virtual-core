@@ -1,4 +1,4 @@
-PROJECT_NAME = test-project
+PROJECT_NAME = virtual-core
 ITCHIO_USER = puroprimesouscaprisun
 
 # CXX
