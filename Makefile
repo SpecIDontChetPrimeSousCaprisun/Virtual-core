@@ -79,7 +79,8 @@ COMMON_SRC = \
 	src/Button.cpp \
 	src/Particle.cpp \
 	src/Enemy.cpp \
-	src/UIParticle.cpp
+	src/UIParticle.cpp \
+	src/Item.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)
