@@ -11,7 +11,7 @@ UIElement* Inventory::background;
 UIElement* Inventory::hoverEffect;
 bool Inventory::isPressed = false;
 bool Inventory::visible = false;
-float Inventory::gridSize = 10;
+float Inventory::gridSize = 3;
 
 void Inventory::init() {
   std::vector<Object*> uiElements;

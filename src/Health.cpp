@@ -47,7 +47,7 @@ float easeOutQuint(float t) {
 void Health::update() {
   if (glfwGetKey(Window::window, GLFW_KEY_Q) && !playingOpenAnim) {
     if (background->visible) {
-
+      ui->changeVisibility(false);
     } else {
       background->visible = true;
       background->size = glm::vec2(0.0f, 0.0f);
@@ -88,6 +88,8 @@ void Health::update() {
       }
 
       cout.clear();
+      ui->changeVisibility(true);
+      
     }
   }
 }
