@@ -8,6 +8,7 @@
 #include "UIElement.h"
 #include "Button.h"
 #include "Item.h"
+#include "Inventory.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -168,6 +169,7 @@ void Window::updateFrame() {
   Player::update();
   Object::updateAll();
   Item::update();
+  Inventory::update();
 
   Object::drawAll();
 
