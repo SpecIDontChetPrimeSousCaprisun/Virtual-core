@@ -10,13 +10,20 @@ UIElement* Health::background;
 std::vector<TextElement*> Health::cout;
 std::vector<std::string> Health::coutText;
 int Health::lastCoutText = 0;
+Container* Health::ui;
 
 void Health::init() {
+  std::vector<Object*> uiElements;
+
   background = new UIElement(glm::vec2(0.5f, 0.5f), glm::vec2(0.75f, 0.75f), 0.05f, glm::vec3(0.0f, 0.0f, 0.0f), 10);
 
   background->anchorPoint = glm::vec2(0.5f, 0.5f);
-  background->visible = false;
-  background->registerObject();
+ 
+  uiElements.push_back(background);
+
+  ui = new Container(uiElements);
+  ui->changeVisibility(false);
+  ui->registerObjects();
 
   coutText.push_back(R"( _   _ _____    _    _   _____ _   _ )");
   coutText.push_back(R"(| | | | ____|  / \  | | |_   _| | | |)");
@@ -75,6 +82,12 @@ void Health::update() {
         cout.push_back(text);
         lastCoutText++;
       }
+    } else {
+      for (TextElement* text : cout) {
+        text->pendDelete();
+      }
+
+      cout.clear();
     }
   }
 }

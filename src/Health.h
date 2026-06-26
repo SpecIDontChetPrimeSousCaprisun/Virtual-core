@@ -2,6 +2,7 @@
 
 #include "UIElement.h"
 #include "TextElement.h"
+#include "Container.h"
 
 #include <vector>
 #include <string>
@@ -18,4 +19,5 @@ private:
   static std::vector<TextElement*> cout;
   static std::vector<std::string> coutText;
   static int lastCoutText;
+  static Container* ui;
 };
