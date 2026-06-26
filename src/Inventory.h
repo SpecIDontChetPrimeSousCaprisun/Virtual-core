@@ -29,5 +29,6 @@ private:
   static float gridSize;
 
   static bool isOccupied(InventoryPlaceInfo* info);
+  static Item* getItemAtGridPos(glm::vec2 position);
   static void dropCurrentItem();
 };

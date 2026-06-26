@@ -66,14 +66,34 @@ void Inventory::update() {
     local.x = std::floor(local.x / cellSize.x) * cellSize.x;
     local.y = std::floor(local.y / cellSize.y) * cellSize.y;
 
+    int tileX = (int)(local.x / cellSize.x);
+    int tileY = (int)(local.y / cellSize.y);
+
     if (selectedItem == nullptr) {
       hoverEffect->size = background->size / gridSize;
       hoverEffect->color = glm::vec3(1.0f, 1.0f, 1.0f);
-    } else {
-      hoverEffect->size = (background->size / gridSize) * selectedItem->size;
 
-      int tileX = (int)(local.x / cellSize.x);
-      int tileY = (int)(local.y / cellSize.y);
+      if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        Item* item = getItemAtGridPos(glm::vec2(tileX, tileY));
+
+        if (item != nullptr) {
+          selectedItem = item;
+          for (auto it = items.begin(); it != items.end(); ++it)
+          {
+              if (it->second == item)
+              {
+                  InventoryPlaceInfo* slot = it->first;
+
+                  slot->element->pendDelete();          // destroy key object
+                  items.erase(it);      // remove from map
+
+                  break;
+              }
+          }
+        }
+      }
+    } else {
+      hoverEffect->size = (background->size / gridSize) * selectedItem->size; 
 
       if ((tileX + selectedItem->size.x) > gridSize || (tileY + selectedItem->size.y) > gridSize) {
         hoverEffect->visible = false;
@@ -115,6 +135,8 @@ void Inventory::update() {
     hoverEffect->visible = true;
   } else {
     hoverEffect->visible = false;
+
+    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS && selectedItem) dropCurrentItem();
   }
 }
 
@@ -132,6 +154,22 @@ bool Inventory::isOccupied(InventoryPlaceInfo* info) {
   }
 
   return occupied;
+}
+
+Item* Inventory::getItemAtGridPos(glm::vec2 position) {
+  Item* item = nullptr;
+
+  for (auto& [other, loopedItem] : items) {
+    if (position.x >= other->position.x &&
+        position.x < other->position.x + other->size.x &&
+        position.y >= other->position.y &&
+        position.y < other->position.y + other->size.y) {
+      item = loopedItem;
+      break;
+    }
+  }
+
+  return item;
 }
 
 void Inventory::dropCurrentItem() {
