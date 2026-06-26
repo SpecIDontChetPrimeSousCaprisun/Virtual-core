@@ -21,6 +21,8 @@ public:
 protected:
   void beforeUpdate() override;
 private:
+  static bool dealtFallDamage;
+
   float health;
   float lastJump;
   std::string state;

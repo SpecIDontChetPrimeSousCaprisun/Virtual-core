@@ -3,6 +3,7 @@
 #include "Particle.h"
 #include "Sound.h"
 #include "UIParticle.h"
+#include "Health.h"
 
 #include <cmath>
 #include <thread>
@@ -10,6 +11,7 @@
 Player* Player::currentPlayer;
 UIElement* Player::healthBar;
 UIElement* Player::healthBarBackground;
+bool Player::dealtFallDamage = false;
 
 Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, bool isCurrentPlayer) 
   : Object(position, size, transparency, texPath, zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f) {
@@ -125,7 +127,25 @@ void Player::update() {
     currentPlayer->position.x += currentPlayer->linearVelocity.x * Window::deltaTime;
   } else if (result || resultR || resultL) {
     currentPlayer->linearVelocity.x = 0.0f;
+
+    if (currentPlayer->linearVelocity.y > 10000.0f) {
+      Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 1000.0f);
+      currentPlayer->linearVelocity.y = 0.0f;
+    }
   }
+
+  if ((result || resultR || resultL) && currentPlayer->linearVelocity.y > 500.0f && !dealtFallDamage) {
+    dealtFallDamage = true;
+    Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 50.0f);
+    Health::dealDmgToBodyPart("right foot", currentPlayer->linearVelocity.y / 50.0f);
+    Health::dealDmgToBodyPart("left calf", currentPlayer->linearVelocity.y / 100.0f);
+    Health::dealDmgToBodyPart("right calf", currentPlayer->linearVelocity.y / 100.0f);
+    Health::dealDmgToBodyPart("left thigh", currentPlayer->linearVelocity.y / 250.0f);
+    Health::dealDmgToBodyPart("right thigh", currentPlayer->linearVelocity.y / 250.0f);
+  } else if (!(result || resultR || resultL)) {
+    dealtFallDamage = false;
+  }
+
 
   currentPlayer->lastJump -= Window::deltaTime;
 

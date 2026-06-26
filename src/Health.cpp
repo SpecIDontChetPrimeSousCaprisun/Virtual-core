@@ -11,6 +11,7 @@ std::vector<TextElement*> Health::cout;
 std::vector<std::string> Health::coutText;
 int Health::lastCoutText = 0;
 std::map<std::string, Button*> Health::bodyParts;
+std::map<std::string, float> Health::bodyPartHealth;
 Container* Health::ui;
 
 void Health::init() {
@@ -169,6 +170,7 @@ void Health::init() {
 
   for (auto& [name, part] : bodyParts) {
     uiElements.push_back(part);
+    bodyPartHealth[name] = 100.0f;
   }
 
   ui = new Container(uiElements);
@@ -194,6 +196,10 @@ float easeOutQuint(float t) {
     return 1.0f - u * u * u * u * u;
 }
 
+float lerp(float a, float b, float t) {
+  return a + t * (b - a);
+}
+
 void Health::update() {
   if (glfwGetKey(Window::window, GLFW_KEY_Q) && !playingOpenAnim && !pressed) {
     pressed = true;
@@ -209,6 +215,12 @@ void Health::update() {
     }
   } else if (!glfwGetKey(Window::window, GLFW_KEY_Q)) {
     pressed = false;
+  }
+
+  for (auto& [name, part] : bodyParts) {
+    part->color.x = lerp(0.25f, 1.0f, 1 - (bodyPartHealth[name] / 100.0f));
+    part->color.y = lerp(0.25f, 0.0f, 1 - (bodyPartHealth[name] / 100.0f));
+    part->color.z = lerp(0.25f, 0.0f, 1 - (bodyPartHealth[name] / 100.0f));
   }
 
   if (playingOpenAnim) {
@@ -246,4 +258,8 @@ void Health::update() {
       ui->changeVisibility(true);
     }
   }
+}
+
+void Health::dealDmgToBodyPart(std::string bodyPart, float dmg) {
+  bodyPartHealth[bodyPart] -= dmg;
 }
