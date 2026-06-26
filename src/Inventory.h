@@ -3,6 +3,7 @@
 #include <map>
 
 #include "Item.h"
+#include "UIElement.h"
 #include "Container.h"
 
 struct InventoryPlaceInfo {
@@ -19,6 +20,9 @@ public:
   static void update();
 private:
   static Container* ui;
+  static UIElement* background;
+  static UIElement* hoverEffect;
   static bool isPressed;
   static bool visible;
+  static float gridSize;
 };

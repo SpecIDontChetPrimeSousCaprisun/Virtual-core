@@ -23,3 +23,11 @@ drawInfo* UIElement::baseBeforeDrawing() {
 
   return new drawInfo(pixelPos, pixelSize);
 }
+
+glm::vec2 UIElement::getActualPosition() {
+  return beforeDrawing()->position;
+}
+
+glm::vec2 UIElement::getActualSize() {
+  return beforeDrawing()->size;
+}
