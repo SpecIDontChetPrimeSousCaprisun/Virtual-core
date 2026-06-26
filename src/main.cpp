@@ -28,6 +28,7 @@ int main() {
   Object* platform = new Object(glm::vec2(-500.0f, 500.0f), glm::vec2(1000.0f, 1000.0f), 0.0f, "textures/Wallpaper.jpeg", 1);
   Object* background = new Object(glm::vec2(-750.0f, 250.0f), glm::vec2(1500.0f, 1500.0f), 0.0f, "textures/Wallpaper.jpeg", -1);
   Item* item = new Item(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 50.0f), 0.0f, "textures/player.png", 1, "test");
+  Item* item2 = new Item(glm::vec2(150.0f, 0.0f), glm::vec2(100.0f, 50.0f), 0.0f, "textures/player.png", 1, "test");
 
   plr->registerObject();
 
@@ -47,6 +48,7 @@ int main() {
   background->registerObject();
 
   item->registerObject();
+  item2->registerObject();
 
   Window::mainLoop();
   Sound::unInit();

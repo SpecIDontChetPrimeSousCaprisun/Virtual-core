@@ -87,6 +87,8 @@ void Inventory::update() {
         info->element = new UIElement(hoverEffect->position, hoverEffect->size, 0.0f, selectedItem->texPath, 11);
         info->element->registerObject();
 
+        ui->objects.push_back(info->element);
+
         items[info] = selectedItem;
         selectedItem->visible = false;
         selectedItem = nullptr;
