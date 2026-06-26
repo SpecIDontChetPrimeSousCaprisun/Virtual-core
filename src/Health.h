@@ -1,6 +1,10 @@
 #pragma once
 
 #include "UIElement.h"
+#include "TextElement.h"
+
+#include <vector>
+#include <string>
 
 class Health {
 public:
@@ -11,4 +15,7 @@ private:
   static bool playingOpenAnim;
   static float openAnimTime;
   static UIElement* background;
+  static std::vector<TextElement*> cout;
+  static std::vector<std::string> coutText;
+  static int lastCoutText;
 };
