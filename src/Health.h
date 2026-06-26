@@ -2,9 +2,11 @@
 
 #include "UIElement.h"
 #include "TextElement.h"
+#include "Button.h"
 #include "Container.h"
 
 #include <vector>
+#include <map>
 #include <string>
 
 class Health {
@@ -19,5 +21,6 @@ private:
   static std::vector<TextElement*> cout;
   static std::vector<std::string> coutText;
   static int lastCoutText;
+  static std::map<std::string, Button*> bodyParts;
   static Container* ui;
 };
