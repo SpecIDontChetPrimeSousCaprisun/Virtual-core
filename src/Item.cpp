@@ -2,6 +2,7 @@
 #include "Window.h"
 
 TextElement* Item::interactionElement;
+bool Item::wasSelected;
 
 Item::Item(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name) 
   : Object(position, size, transparency, texPath, zIndex), name(name) {
@@ -26,6 +27,11 @@ void Item::init() {
   interactionElement->registerObject();
 }
 
+void Item::update() {
+  interactionElement->visible = wasSelected;
+  wasSelected = false;
+}
+
 void Item::beforeUpdate() {
   double mouseX;
   double mouseY;
@@ -37,8 +43,10 @@ void Item::beforeUpdate() {
   if (mouseX >= info->position.x &&
       mouseX <= info->position.x + info->size.x &&
       mouseY >= info->position.y &&
-      mouseY >= info->position.y + info->size.y) {
+      mouseY <= info->position.y + info->size.y) {
     interactionElement->visible = true;
     interactionElement->text = name;
+    interactionElement->position = glm::vec2(mouseX / Window::fbWidth, mouseY / Window::fbHeight);
+    wasSelected = true;
   }
 }

@@ -9,6 +9,7 @@ public:
   Item(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex, std::string name);
 
   static void init();
+  static void update();
 
   std::string name;
 protected:
@@ -17,4 +18,5 @@ private:
   void initObject();
 
   static TextElement* interactionElement;
+  static bool wasSelected;
 };
