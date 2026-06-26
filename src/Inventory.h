@@ -10,6 +10,7 @@ struct InventoryPlaceInfo {
 public:
   glm::vec2 position, size;
   float rotation;
+  UIElement* element;
 };
 
 class Inventory {

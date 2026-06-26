@@ -45,7 +45,8 @@ void Item::beforeUpdate() {
   if (mouseX >= info->position.x &&
       mouseX <= info->position.x + info->size.x &&
       mouseY >= info->position.y &&
-      mouseY <= info->position.y + info->size.y) {
+      mouseY <= info->position.y + info->size.y &&
+      visible) {
     interactionElement->visible = true;
     interactionElement->text = name;
     interactionElement->position = glm::vec2(mouseX / Window::fbWidth, mouseY / Window::fbHeight);

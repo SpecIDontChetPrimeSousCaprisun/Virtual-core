@@ -77,6 +77,20 @@ void Inventory::update() {
         hoverEffect->visible = false;
         return;
       }
+
+      if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) {
+        InventoryPlaceInfo* info = new InventoryPlaceInfo();
+
+        info->position = glm::vec2(tileX, tileY);
+        info->size = selectedItem->size;
+        info->rotation = 0.0f;
+        info->element = new UIElement(hoverEffect->position, hoverEffect->size, 0.0f, selectedItem->texPath, 11);
+        info->element->registerObject();
+
+        items[info] = selectedItem;
+        selectedItem->visible = false;
+        selectedItem = nullptr;
+      }
     }
 
     hoverEffect->position = (local + gridOrigin) / glm::vec2(Window::fbWidth, Window::fbHeight);

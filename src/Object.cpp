@@ -235,7 +235,7 @@ void Object::registerObject() {
 }
 
 Object::Object(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex) 
-  : position(position), size(size), linearVelocity(glm::vec2(0.0f, 0.0f)), transparency(transparency), texture(FileLoader::loadTexture(texPath)), zIndex(zIndex), visible(true), anchored(true), canCollide(false), rotation(0), pendingDelete(false), usesColor(false) {
+  : position(position), size(size), linearVelocity(glm::vec2(0.0f, 0.0f)), transparency(transparency), texPath(texPath), texture(FileLoader::loadTexture(texPath)), zIndex(zIndex), visible(true), anchored(true), canCollide(false), rotation(0), pendingDelete(false), usesColor(false) {
     init();
 }
 

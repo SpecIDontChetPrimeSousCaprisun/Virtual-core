@@ -50,6 +50,7 @@ public:
   float transparency, rotation, cornerRadius, parallaxFactor;
   bool visible, anchored, canCollide;
   int zIndex;
+  std::string texPath;
 protected:
   virtual drawInfo* beforeDrawing();
   virtual void afterDrawing(drawInfo* info);
