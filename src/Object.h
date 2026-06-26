@@ -47,6 +47,7 @@ public:
   bool isDeleted();
 
   glm::vec2 position, size, linearVelocity;
+  glm::vec3 color;
   float transparency, rotation, cornerRadius, parallaxFactor;
   bool visible, anchored, canCollide;
   int zIndex;
@@ -68,8 +69,7 @@ private:
 
   static void deletePendingObjects();
 
-  unsigned int VAO, VBO, texture;
-  glm::vec3 color; 
+  unsigned int VAO, VBO, texture; 
   bool usesColor;
 
   void init();

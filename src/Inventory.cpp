@@ -1,5 +1,6 @@
 #include "Inventory.h"
 #include "Window.h"
+#include "Player.h"
 
 #include <cmath>
 
@@ -67,6 +68,7 @@ void Inventory::update() {
 
     if (selectedItem == nullptr) {
       hoverEffect->size = background->size / gridSize;
+      hoverEffect->color = glm::vec3(1.0f, 1.0f, 1.0f);
     } else {
       hoverEffect->size = (background->size / gridSize) * selectedItem->size;
 
@@ -78,20 +80,34 @@ void Inventory::update() {
         return;
       }
 
-      if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) {
-        InventoryPlaceInfo* info = new InventoryPlaceInfo();
+      InventoryPlaceInfo occupiedInfo = InventoryPlaceInfo();
 
-        info->position = glm::vec2(tileX, tileY);
-        info->size = selectedItem->size;
-        info->rotation = 0.0f;
-        info->element = new UIElement(hoverEffect->position, hoverEffect->size, 0.0f, selectedItem->texPath, 11);
-        info->element->registerObject();
+      occupiedInfo.position = glm::vec2(tileX, tileY);
+      occupiedInfo.size = selectedItem->size;
+      occupiedInfo.rotation = 0.0f;
 
-        ui->objects.push_back(info->element);
+      if (isOccupied(&occupiedInfo)) {
+        hoverEffect->color = glm::vec3(1.0f, 0.0f, 0.0f);
 
-        items[info] = selectedItem;
-        selectedItem->visible = false;
-        selectedItem = nullptr;
+        if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) dropCurrentItem();
+      } else {
+        hoverEffect->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+        if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) {
+          InventoryPlaceInfo* info = new InventoryPlaceInfo();
+
+          info->position = glm::vec2(tileX, tileY);
+          info->size = selectedItem->size;
+          info->rotation = 0.0f;
+          info->element = new UIElement(hoverEffect->position, hoverEffect->size, 0.0f, selectedItem->texPath, 11);
+          info->element->registerObject();
+
+          ui->objects.push_back(info->element);
+
+          items[info] = selectedItem;
+          selectedItem->visible = false;
+          selectedItem = nullptr;
+        }
       }
     }
 
@@ -100,4 +116,31 @@ void Inventory::update() {
   } else {
     hoverEffect->visible = false;
   }
+}
+
+bool Inventory::isOccupied(InventoryPlaceInfo* info) {
+  bool occupied = false;
+
+  for (auto& [other, item] : items) {
+    if (info->position.x < other->position.x + other->size.x &&
+        info->position.x + info->size.x > other->position.x &&
+        info->position.y < other->position.y + other->size.y &&
+        info->position.y + info->size.y > other->position.y) {
+      occupied = true;
+      break;
+    }
+  }
+
+  return occupied;
+}
+
+void Inventory::dropCurrentItem() {
+  double mouseX;
+  double mouseY;
+
+  glfwGetCursorPos(Window::window, &mouseX, &mouseY);
+
+  selectedItem->position = Player::currentPlayer->position;
+  selectedItem->visible = true;
+  selectedItem = nullptr;
 }

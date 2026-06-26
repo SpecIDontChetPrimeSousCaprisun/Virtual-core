@@ -27,4 +27,7 @@ private:
   static UIElement* hoverEffect;
   static bool isPressed; 
   static float gridSize;
+
+  static bool isOccupied(InventoryPlaceInfo* info);
+  static void dropCurrentItem();
 };
