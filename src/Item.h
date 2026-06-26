@@ -12,6 +12,7 @@ public:
   static void update();
 
   std::string name;
+  glm::vec2 size;
 protected:
   void beforeUpdate() override;
 private:

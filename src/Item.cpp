@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "Window.h"
+#include "Inventory.h"
 
 TextElement* Item::interactionElement;
 bool Item::wasSelected;
@@ -17,6 +18,7 @@ Item::Item(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 col
 void Item::initObject() {
   anchored = true;
   canCollide = false;
+  size = glm::vec2(1.0f, 2.0f);
 }
 
 void Item::init() {
@@ -48,5 +50,10 @@ void Item::beforeUpdate() {
     interactionElement->text = name;
     interactionElement->position = glm::vec2(mouseX / Window::fbWidth, mouseY / Window::fbHeight);
     wasSelected = true;
+
+    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+      Inventory::selectedItem = this;
+      Inventory::visible = true;
+    }
   }
 }

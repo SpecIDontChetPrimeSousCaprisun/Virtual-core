@@ -15,6 +15,8 @@ public:
 class Inventory {
 public:
   static std::map<InventoryPlaceInfo*, Item*> items;
+  static Item* selectedItem;
+  static bool visible;
 
   static void init();
   static void update();
@@ -22,7 +24,6 @@ private:
   static Container* ui;
   static UIElement* background;
   static UIElement* hoverEffect;
-  static bool isPressed;
-  static bool visible;
+  static bool isPressed; 
   static float gridSize;
 };

@@ -4,6 +4,7 @@
 #include <cmath>
 
 std::map<InventoryPlaceInfo*, Item*> Inventory::items;
+Item* Inventory::selectedItem = nullptr;
 Container* Inventory::ui;
 UIElement* Inventory::background;
 UIElement* Inventory::hoverEffect;
@@ -32,14 +33,16 @@ void Inventory::init() {
 void Inventory::update() {
   if (glfwGetKey(Window::window, GLFW_KEY_E) == GLFW_PRESS && !isPressed) {
     isPressed = true;
-    visible = !visible;
-    ui->changeVisibility(visible);
+    visible = !visible; 
   } else if (glfwGetKey(Window::window, GLFW_KEY_E) != GLFW_PRESS) {
     isPressed = false;
   }
 
+  ui->changeVisibility(visible);
+
   if (!visible) {
     hoverEffect->visible = false;
+    selectedItem = nullptr;
     return;
   }
 
@@ -62,7 +65,20 @@ void Inventory::update() {
     local.x = std::floor(local.x / cellSize.x) * cellSize.x;
     local.y = std::floor(local.y / cellSize.y) * cellSize.y;
 
-    hoverEffect->size = background->size / gridSize;
+    if (selectedItem == nullptr) {
+      hoverEffect->size = background->size / gridSize;
+    } else {
+      hoverEffect->size = (background->size / gridSize) * selectedItem->size;
+
+      int tileX = (int)(local.x / cellSize.x);
+      int tileY = (int)(local.y / cellSize.y);
+
+      if ((tileX + selectedItem->size.x) > gridSize || (tileY + selectedItem->size.y) > gridSize) {
+        hoverEffect->visible = false;
+        return;
+      }
+    }
+
     hoverEffect->position = (local + gridOrigin) / glm::vec2(Window::fbWidth, Window::fbHeight);
     hoverEffect->visible = true;
   } else {
