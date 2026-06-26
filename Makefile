@@ -81,7 +81,8 @@ COMMON_SRC = \
 	src/Enemy.cpp \
 	src/UIParticle.cpp \
 	src/Item.cpp \
-	src/Inventory.cpp
+	src/Inventory.cpp \
+	src/Health.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)

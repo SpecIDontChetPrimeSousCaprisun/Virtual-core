@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "Item.h"
 #include "Inventory.h"
+#include "Health.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,6 +22,7 @@ int main() {
   TextElement::initShader();
   Item::init();
   Inventory::init();
+  Health::init();
 
   Player* plr = new Player(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0.0f, "textures/player.png", 2, true);
   Enemy* enemy = new Enemy(glm::vec2(-500.0f, 0.0f), glm::vec2(100.0f, 100.0f), "textures/player.png", 2);

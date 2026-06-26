@@ -78,17 +78,15 @@ void Inventory::update() {
 
         if (item != nullptr) {
           selectedItem = item;
-          for (auto it = items.begin(); it != items.end(); ++it)
-          {
-              if (it->second == item)
-              {
-                  InventoryPlaceInfo* slot = it->first;
+          for (auto it = items.begin(); it != items.end(); ++it) {
+            if (it->second == item) {
+              InventoryPlaceInfo* slot = it->first;
 
-                  slot->element->pendDelete();          // destroy key object
-                  items.erase(it);      // remove from map
+              slot->element->pendDelete();          // destroy key object
+              items.erase(it);      // remove from map
 
-                  break;
-              }
+              break;
+            }
           }
         }
       }

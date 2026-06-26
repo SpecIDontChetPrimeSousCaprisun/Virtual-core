@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "Item.h"
 #include "Inventory.h"
+#include "Health.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -170,6 +171,7 @@ void Window::updateFrame() {
   Object::updateAll();
   Item::update();
   Inventory::update();
+  Health::update();
 
   Object::drawAll();
 
