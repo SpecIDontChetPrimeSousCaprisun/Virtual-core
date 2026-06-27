@@ -5,6 +5,13 @@
 #include <cmath>
 
 unsigned int Object::shaderProgram = 0;
+unsigned int Object::blurShaderProgram = 0;
+unsigned int Object::verticalBlurShaderProgram = 0;
+unsigned int Object::sceneFBO = 0;
+unsigned int Object::blurVAO = 0;
+unsigned int Object::blurVBO = 0;
+unsigned int Object::sceneTexture = 0;
+bool Object::blurry = false;
 std::vector<Object*> Object::registerQueue;
 std::map<int, std::vector<Object*>> Object::objects;
 
@@ -28,13 +35,62 @@ void Object::deletePendingObjects() {
 }
 
 void Object::drawAll() {
+  if (blurry) {
+    glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glViewport(0, 0, Window::fbWidth, Window::fbHeight);
+  }
+  
   for (auto& [zIndex, objectsVector] : objects) {
     for (Object* object : objectsVector) {
       object->draw();
     }
-  }
+  } 
 
-  deletePendingObjects();
+  
+  if (blurry) {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glViewport(0, 0, Window::fbWidth, Window::fbHeight);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(blurShaderProgram);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, sceneTexture);
+
+    glUniform1i(
+        glGetUniformLocation(blurShaderProgram, "scene"),
+        0
+    );
+
+    float texelW = 1.0f / Window::fbWidth;
+    float texelH = 1.0f / Window::fbHeight;
+
+    glUniform2f(
+        glGetUniformLocation(blurShaderProgram, "texelSize"),
+        texelW, texelH
+    );
+
+    glBindVertexArray(blurVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glUseProgram(verticalBlurShaderProgram);
+
+    glUniform1i(
+        glGetUniformLocation(blurShaderProgram, "scene"),
+        0
+    );
+
+    glUniform2f(
+        glGetUniformLocation(blurShaderProgram, "texelSize"),
+        texelW, texelH
+    );
+
+    glBindVertexArray(blurVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+  } 
 }
 
 void Object::updateAll() {
@@ -55,6 +111,51 @@ void Object::registerAll() {
   registerQueue.clear();
 }
 
+void Object::recreateBlurTexture() {
+  // Create the texture that will receive the rendered scene
+  glGenTextures(1, &sceneTexture);
+  glBindTexture(GL_TEXTURE_2D, sceneTexture);
+
+  glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGB,
+      Window::fbWidth,
+      Window::fbHeight,
+      0,
+      GL_RGB,
+      GL_UNSIGNED_BYTE,
+      nullptr
+  );
+
+  // Filtering
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // Wrapping
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glGenFramebuffers(1, &sceneFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO);
+
+  // create sceneTexture
+
+  glFramebufferTexture2D(
+      GL_FRAMEBUFFER,
+      GL_COLOR_ATTACHMENT0,
+      GL_TEXTURE_2D,
+      sceneTexture,
+      0
+  );
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+      std::cout << "Framebuffer is incomplete!" << std::endl;
+  }
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void Object::initShader() {
   // already initialized
   if (shaderProgram != 0)
@@ -66,8 +167,20 @@ void Object::initShader() {
   std::string fragmentCode =
       FileLoader::loadFile("shaders/2DFragment.glsl");
 
+  std::string blurVertexCode =
+      FileLoader::loadFile("shaders/blurVertex.glsl");
+
+  std::string blurFragmentCode =
+      FileLoader::loadFile("shaders/blurFragment.glsl");
+
+  std::string verticalBlurFragmentCode =
+      FileLoader::loadFile("shaders/verticalBlurFragment.glsl");
+
   const char* vertexShaderSource = vertexCode.c_str();
   const char* fragmentShaderSource = fragmentCode.c_str();
+  const char* blurVertexShaderSource = blurVertexCode.c_str();
+  const char* blurFragmentShaderSource = blurFragmentCode.c_str();
+  const char* verticalBlurFragmentShaderSource = verticalBlurFragmentCode.c_str();
 
   // ===== VERTEX SHADER =====
   unsigned int vertexShader =
@@ -166,9 +279,261 @@ void Object::initShader() {
           << std::endl;
   }
 
+  // ===== BLUR =====
+  unsigned int blurVertexShader =
+      glCreateShader(GL_VERTEX_SHADER);
+
+  glShaderSource(
+      blurVertexShader,
+      1,
+      &blurVertexShaderSource,
+      NULL
+  );
+
+  glCompileShader(blurVertexShader);
+
+  glGetShaderiv(
+      blurVertexShader,
+      GL_COMPILE_STATUS,
+      &success
+  );
+
+  if (!success) {
+      glGetShaderInfoLog(
+          blurVertexShader,
+          512,
+          NULL,
+          infoLog
+      );
+
+      std::cout
+          << "BLUR VERTEX SHADER ERROR:\n"
+          << infoLog
+          << std::endl;
+  }
+
+  unsigned int blurFragmentShader =
+      glCreateShader(GL_FRAGMENT_SHADER);
+
+  glShaderSource(
+      blurFragmentShader,
+      1,
+      &blurFragmentShaderSource,
+      NULL
+  );
+
+  glCompileShader(blurFragmentShader);
+
+  glGetShaderiv(
+      blurFragmentShader,
+      GL_COMPILE_STATUS,
+      &success
+  );
+
+  if (!success) {
+      glGetShaderInfoLog(
+          blurFragmentShader,
+          512,
+          NULL,
+          infoLog
+      );
+
+      std::cout
+          << "BLUR FRAGMENT SHADER ERROR:\n"
+          << infoLog
+          << std::endl;
+  }
+
+  blurShaderProgram = glCreateProgram();
+
+  glAttachShader(blurShaderProgram, blurVertexShader);
+  glAttachShader(blurShaderProgram, blurFragmentShader);
+  glBindAttribLocation(blurShaderProgram, 0, "position");
+  glBindAttribLocation(blurShaderProgram, 1, "texCoord");
+
+  glLinkProgram(blurShaderProgram);
+
+  glGetProgramiv(
+      blurShaderProgram,
+      GL_LINK_STATUS,
+      &success
+  );
+
+  if (!success) {
+      glGetProgramInfoLog(
+          blurShaderProgram,
+          512,
+          NULL,
+          infoLog
+      );
+
+      std::cout
+          << "BLUR PROGRAM LINK ERROR:\n"
+          << infoLog
+          << std::endl;
+  }
+
+  unsigned int verticalBlurFragmentShader =
+      glCreateShader(GL_FRAGMENT_SHADER);
+
+  glShaderSource(
+      verticalBlurFragmentShader,
+      1,
+      &verticalBlurFragmentShaderSource,
+      NULL
+  );
+
+  glCompileShader(verticalBlurFragmentShader);
+
+  glGetShaderiv(
+      verticalBlurFragmentShader,
+      GL_COMPILE_STATUS,
+      &success
+  );
+
+  if (!success) {
+      glGetShaderInfoLog(
+          verticalBlurFragmentShader,
+          512,
+          NULL,
+          infoLog
+      );
+
+      std::cout
+          << "BLUR FRAGMENT SHADER ERROR:\n"
+          << infoLog
+          << std::endl;
+  }
+
+  verticalBlurShaderProgram = glCreateProgram();
+
+  glAttachShader(verticalBlurShaderProgram, blurVertexShader);
+  glAttachShader(verticalBlurShaderProgram, verticalBlurFragmentShader);
+  glBindAttribLocation(verticalBlurShaderProgram, 0, "position");
+  glBindAttribLocation(verticalBlurShaderProgram, 1, "texCoord");
+
+  glLinkProgram(verticalBlurShaderProgram);
+
+  glGetProgramiv(
+      verticalBlurShaderProgram,
+      GL_LINK_STATUS,
+      &success
+  );
+
+  if (!success) {
+      glGetProgramInfoLog(
+          verticalBlurShaderProgram,
+          512,
+          NULL,
+          infoLog
+      );
+
+      std::cout
+          << "BLUR PROGRAM LINK ERROR:\n"
+          << infoLog
+          << std::endl;
+  }
+
   // cleanup
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
+  glDeleteShader(blurVertexShader);
+  glDeleteShader(blurFragmentShader);
+  glDeleteShader(verticalBlurFragmentShader);
+
+  //Blur stuff
+  float blurVertices[] = {
+    // position      texcoords
+
+    -1.0f,  1.0f,    0.0f, 1.0f,
+    -1.0f, -1.0f,    0.0f, 0.0f,
+    1.0f, -1.0f,    1.0f, 0.0f,
+
+    -1.0f,  1.0f,    0.0f, 1.0f,
+    1.0f, -1.0f,    1.0f, 0.0f,
+    1.0f,  1.0f,    1.0f, 1.0f
+  };
+
+  glGenVertexArrays(1, &blurVAO);
+  glGenBuffers(1, &blurVBO);
+
+  glBindVertexArray(blurVAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, blurVBO);
+  glBufferData(
+      GL_ARRAY_BUFFER,
+      sizeof(blurVertices),
+      blurVertices,
+      GL_STATIC_DRAW
+  );
+
+  // position
+  glVertexAttribPointer(
+      0,
+      2,
+      GL_FLOAT,
+      GL_FALSE,
+      4 * sizeof(float),
+      (void*)0
+  );
+  glEnableVertexAttribArray(0);
+
+  // UV
+  glVertexAttribPointer(
+      1,
+      2,
+      GL_FLOAT,
+      GL_FALSE,
+      4 * sizeof(float),
+      (void*)(2 * sizeof(float))
+  );
+  glEnableVertexAttribArray(1);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+
+  // Create the texture that will receive the rendered scene
+  glGenTextures(1, &sceneTexture);
+  glBindTexture(GL_TEXTURE_2D, sceneTexture);
+
+  glTexImage2D(
+      GL_TEXTURE_2D,
+      0,
+      GL_RGB,
+      Window::fbWidth,
+      Window::fbHeight,
+      0,
+      GL_RGB,
+      GL_UNSIGNED_BYTE,
+      nullptr
+  );
+
+  // Filtering
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  // Wrapping
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glGenFramebuffers(1, &sceneFBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO);
+
+  // create sceneTexture
+
+  glFramebufferTexture2D(
+      GL_FRAMEBUFFER,
+      GL_COLOR_ATTACHMENT0,
+      GL_TEXTURE_2D,
+      sceneTexture,
+      0
+  );
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+      std::cout << "Framebuffer is incomplete!" << std::endl;
+  }
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   std::cout << "2D shader initialized\n";
 }

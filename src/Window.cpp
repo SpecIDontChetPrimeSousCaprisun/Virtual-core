@@ -138,7 +138,14 @@ void Window::updateFrame() {
   );
   #endif
 
+  int oldFbWidth = fbWidth;
+  int oldFbHeight = fbHeight;
+
   glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+
+  if (fbWidth != oldFbWidth || fbHeight != oldFbHeight) {
+    Object::recreateBlurTexture();
+  }
 
   if (fbWidth == 0 || fbHeight == 0) {
     glfwSwapBuffers(window);

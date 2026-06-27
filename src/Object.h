@@ -30,7 +30,10 @@ public:
   Object(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex);
   virtual ~Object();
 
+  static bool blurry;
+
   static void initShader();
+  static void recreateBlurTexture();
   static void updateAll();
   static void drawAll();
   static void registerAll();
@@ -65,7 +68,7 @@ protected:
 private:
   static std::vector<Object*> registerQueue;
   static std::map<int, std::vector<Object*>> objects;
-  static unsigned int shaderProgram;
+  static unsigned int shaderProgram, blurShaderProgram, verticalBlurShaderProgram, sceneFBO, blurVAO, blurVBO, sceneTexture; 
 
   static void deletePendingObjects();
 
