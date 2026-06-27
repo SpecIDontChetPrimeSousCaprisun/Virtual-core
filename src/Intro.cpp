@@ -127,7 +127,7 @@ void Intro::init() {
       startButton->text = "Start";
     }
   });
-  startButton->setCallback([background, ui]() {
+  startButton->setCallback([]() {
     ui->changeVisibility(false);
     background->visible = false;
 
