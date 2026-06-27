@@ -5,6 +5,7 @@
 
 #include "UIElement.h"
 #include "TextElement.h"
+#include "Container.h"
 
 class Intro {
 public:
@@ -16,4 +17,6 @@ private:
   static float time;
   static int lastCoutText;
   static UIElement* background;
+  static Container* ui;
+  static bool finishedIntro;
 };

@@ -1,11 +1,16 @@
 #include "Intro.h"
 #include "Window.h"
+#include "Button.h"
+#include "Player.h"
+#include "Item.h"
 
 std::vector<std::string> Intro::coutText;
 std::vector<TextElement*> Intro::cout;
 float Intro::time = 0.0f;
 int Intro::lastCoutText = 0;
 UIElement* Intro::background;
+Container* Intro::ui;
+bool Intro::finishedIntro = false;
 
 void Intro::init() {
   coutText.push_back("Loading Linux kernel...");
@@ -63,7 +68,7 @@ void Intro::init() {
 
   coutText.push_back("[LOG] Spawning core services...");
   coutText.push_back("[LOG] waybar started");
-  coutText.push_back("[LOG] swww initialized");
+  coutText.push_back("[LOG] hyprpaper initialized");
   coutText.push_back("[LOG] network-manager-applet started");
 
   coutText.push_back("[LOG] Compositor ready");
@@ -71,9 +76,111 @@ void Intro::init() {
 
   background = new UIElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1);
   background->registerObject();
+
+  std::vector<Object*> uiElements;
+
+  TextElement* title = new TextElement(glm::vec2(0.0f, 0.0f),
+                                      glm::vec2(1.0f, 0.2f),
+                                      1.0f,
+                                      glm::vec3(0.0f, 0.0f, 0.0f),
+                                      2,
+                                      "Virtual core",
+                                      "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                      glm::vec3(1.0f, 1.0f, 1.0f));
+  
+  Button* startButton = new Button(glm::vec2(0.0f, 0.6f),
+                                  glm::vec2(1.0f, 0.075f),
+                                  1.0f,
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  2,
+                                  "Start",
+                                  "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                  glm::vec3(1.0f, 1.0f, 1.0f));
+
+  Button* continueButton = new Button(glm::vec2(0.0f, 0.675f),
+                                  glm::vec2(1.0f, 0.075f),
+                                  1.0f,
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  2,
+                                  "Continue",
+                                  "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                  glm::vec3(1.0f, 1.0f, 1.0f));
+
+  Button* quitButton = new Button(glm::vec2(0.0f, 0.75f),
+                                  glm::vec2(1.0f, 0.075f),
+                                  1.0f,
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  2,
+                                  "Quit",
+                                  "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                  glm::vec3(1.0f, 1.0f, 1.0f));
+
+
+
+  title->textCentered = false;
+
+  startButton->textCentered = false;
+  startButton->setHoverCallback([startButton](bool hovered) {
+    if (hovered) {
+      startButton->text = "$ Start";
+    } else {
+      startButton->text = "Start";
+    }
+  });
+  startButton->setCallback([background, ui]() {
+    ui->changeVisibility(false);
+    background->visible = false;
+
+    Player* plr = new Player(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0.0f, "textures/player.png", 2, true);
+    Object* obj2 = new Object(glm::vec2(300.0f, 0.0f), glm::vec2(100.0f, 10000.0f), 0.0f, "textures/box.png", 2);
+    Object* platform = new Object(glm::vec2(-500.0f, 500.0f), glm::vec2(1000.0f, 1000.0f), 0.0f, "textures/Wallpaper.jpeg", 1);
+    Object* background = new Object(glm::vec2(-750.0f, 250.0f), glm::vec2(1500.0f, 1500.0f), 0.0f, "textures/Wallpaper.jpeg", -1);
+    Item* item = new Item(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 50.0f), 0.0f, "textures/player.png", 1, "test");
+    Item* item2 = new Item(glm::vec2(150.0f, 0.0f), glm::vec2(100.0f, 50.0f), 0.0f, "textures/player.png", 1, "test");
+
+    plr->registerObject();
+
+    //obj2->anchored = false;
+    obj2->canCollide = true;
+    obj2->linearVelocity = glm::vec2(-100.f, 0.0f);
+    obj2->rotation = 0;
+    obj2->registerObject();
+
+    platform->canCollide = true;
+    //platform->rotation = 15;
+    platform->registerObject();
+
+    background->parallaxFactor = 5.0f;
+    background->registerObject();
+
+    item->registerObject();
+    item2->registerObject();
+  });
+
+  continueButton->textCentered = false;
+
+  quitButton->textCentered = false;
+  quitButton->setHoverCallback([quitButton](bool hovered) {
+    if (hovered) {
+      quitButton->text = "$ Quit";
+    } else {
+      quitButton->text = "Quit";
+    }
+  });
+
+  uiElements.push_back(title);
+  uiElements.push_back(startButton);
+  uiElements.push_back(continueButton);
+  uiElements.push_back(quitButton);
+
+  ui = new Container(uiElements);
+  ui->changeVisibility(false);
+  ui->registerObjects();
 }
 
 void Intro::update() {
+  if (finishedIntro) return;
+
   time += Window::deltaTime;
 
   if ((std::floor(time * 10.0f)) > lastCoutText && lastCoutText < coutText.size()) {
@@ -92,5 +199,14 @@ void Intro::update() {
     cout.push_back(text);
 
     lastCoutText++;
+  } else if (lastCoutText >= coutText.size()) {
+    for (TextElement* text : cout) {
+      text->pendDelete();
+    }
+
+    cout.clear();
+
+    ui->changeVisibility(true);
+    finishedIntro = true;
   }
 }
