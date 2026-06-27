@@ -41,7 +41,7 @@ void Object::drawAll() {
 
     glViewport(0, 0, Window::fbWidth, Window::fbHeight);
   }
-  
+
   for (auto& [zIndex, objectsVector] : objects) {
     for (Object* object : objectsVector) {
       object->draw();

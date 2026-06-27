@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "Inventory.h"
 #include "Health.h"
+#include "Intro.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -176,9 +177,12 @@ void Window::updateFrame() {
 
   Player::update();
   Object::updateAll();
+
+  // UI
   Item::update();
   Inventory::update();
   Health::update();
+  Intro::update();
 
   Object::drawAll();
 
@@ -220,7 +224,7 @@ void Window::mainLoop() {
   menu->registerObjects();
  
   fpsLabel = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(0.25f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "FPS : 0", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-  fpsLabel->registerObject();
+  //fpsLabel->registerObject();
 
   emscripten_set_main_loop(em_loop, 0, 1);
 }
@@ -255,7 +259,7 @@ void Window::mainLoop() {
   menu->registerObjects();
 
   fpsLabel = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(0.25f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "FPS : 0", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-  fpsLabel->registerObject();
+  //fpsLabel->registerObject();
 
   while (!glfwWindowShouldClose(window) && inGame){
     updateFrame();

@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "Inventory.h"
 #include "Health.h"
+#include "Intro.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -23,8 +24,9 @@ int main() {
   Item::init();
   Inventory::init();
   Health::init();
+  Intro::init();
 
-  Player* plr = new Player(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0.0f, "textures/player.png", 2, true);
+  /*Player* plr = new Player(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0.0f, "textures/player.png", 2, true);
   Enemy* enemy = new Enemy(glm::vec2(-500.0f, 0.0f), glm::vec2(100.0f, 100.0f), "textures/player.png", 2);
   Object* obj2 = new Object(glm::vec2(300.0f, 0.0f), glm::vec2(100.0f, 10000.0f), 0.0f, "textures/box.png", 2);
   Object* platform = new Object(glm::vec2(-500.0f, 500.0f), glm::vec2(1000.0f, 1000.0f), 0.0f, "textures/Wallpaper.jpeg", 1);
@@ -50,7 +52,7 @@ int main() {
   background->registerObject();
 
   item->registerObject();
-  item2->registerObject();
+  item2->registerObject();*/
 
   Window::mainLoop();
   Sound::unInit();
