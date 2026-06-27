@@ -5,12 +5,14 @@
 #include "Item.h"
 
 std::vector<std::string> Intro::coutText;
+std::vector<std::string> Intro::quitCoutText;
 std::vector<TextElement*> Intro::cout;
 float Intro::time = 0.0f;
 int Intro::lastCoutText = 0;
 UIElement* Intro::background;
 Container* Intro::ui;
 bool Intro::finishedIntro = false;
+bool Intro::quitAnimation = false;
 
 void Intro::init() {
   coutText.push_back("Loading Linux kernel...");
@@ -73,6 +75,65 @@ void Intro::init() {
 
   coutText.push_back("[LOG] Compositor ready");
   coutText.push_back("[LOG] Entering event loop");
+
+  //Quit cout text
+
+  quitCoutText.push_back("[LOG] Initiating session termination...");
+  quitCoutText.push_back("[LOG] Received SIGTERM from user session");
+
+  quitCoutText.push_back("[LOG] Stopping Hyprland compositor");
+  quitCoutText.push_back("[LOG] Unbinding Wayland display");
+  quitCoutText.push_back("[LOG] Destroying XDG shell surfaces");
+
+  quitCoutText.push_back("[LOG] Stopping user services...");
+  quitCoutText.push_back("[OK] waybar terminated");
+  quitCoutText.push_back("[OK] swww-daemon stopped");
+  quitCoutText.push_back("[OK] network-manager-applet exited");
+
+  quitCoutText.push_back("[LOG] Saving session state");
+  quitCoutText.push_back("[LOG] Flushing input buffers");
+
+  quitCoutText.push_back("[OK] Stopping OpenRC user services");
+  quitCoutText.push_back("[OK] Reached target graphical session stopped");
+
+  quitCoutText.push_back("[LOG] Unmounting user filesystems...");
+  quitCoutText.push_back("[OK] Unmounted /home");
+  quitCoutText.push_back("[OK] Unmounted /run/user/1000");
+
+  quitCoutText.push_back("[LOG] Syncing disks...");
+  quitCoutText.push_back("[OK] I/O buffers flushed to storage");
+
+  quitCoutText.push_back("[LOG] Releasing DRM devices");
+  quitCoutText.push_back("[OK] GPU session released");
+
+  quitCoutText.push_back("");
+  quitCoutText.push_back("[  OK  ] Switching to system shutdown target");
+
+  quitCoutText.push_back("[  OK  ] Stopping system services...");
+  quitCoutText.push_back("[  OK  ] Stopped NetworkManager");
+  quitCoutText.push_back("[  OK  ] Stopped system logging daemon");
+  quitCoutText.push_back("[  OK  ] Stopped cron scheduler");
+  quitCoutText.push_back("[  OK  ] Stopped udev event handler");
+
+  quitCoutText.push_back("[  OK  ] Terminating remaining processes...");
+  quitCoutText.push_back("[  OK  ] All user processes exited");
+
+  quitCoutText.push_back("[  OK  ] Syncing filesystem buffers...");
+  quitCoutText.push_back("[  OK  ] EXT4-fs (nvme0n1p2): clean shutdown completed");
+
+  quitCoutText.push_back("[  LOG  ] Unmounting system filesystems...");
+  quitCoutText.push_back("[  OK  ] Unmounted /var");
+  quitCoutText.push_back("[  OK  ] Unmounted /run");
+  quitCoutText.push_back("[  OK  ] Unmounted /proc");
+  quitCoutText.push_back("[  OK  ] Unmounted /sys");
+
+  quitCoutText.push_back("[LOG] Kernel shutdown in progress...");
+  quitCoutText.push_back("[OK] Freeing unused kernel memory");
+  quitCoutText.push_back("[OK] Stopping CPU cores");
+
+  quitCoutText.push_back("[  LOG  ] Reached system power state S5");
+  quitCoutText.push_back("[  LOG  ] ACPI: Powering off system");
+  quitCoutText.push_back("Power off");
 
   background = new UIElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1);
   background->registerObject();
@@ -167,6 +228,12 @@ void Intro::init() {
       quitButton->text = "Quit";
     }
   });
+  quitButton->setCallback([]() {
+    quitAnimation = true;
+    lastCoutText = 0;
+    time = 0.0f;
+    ui->changeVisibility(false);
+  });
 
   uiElements.push_back(title);
   uiElements.push_back(startButton);
@@ -179,34 +246,55 @@ void Intro::init() {
 }
 
 void Intro::update() {
-  if (finishedIntro) return;
-
   time += Window::deltaTime;
 
-  if ((std::floor(time * 10.0f)) > lastCoutText && lastCoutText < coutText.size()) {
-    TextElement* text = new TextElement(glm::vec2(0.0f, 0.02f * lastCoutText),
-                                        glm::vec2(1.0f, 0.02f),
-                                        1.0f,
-                                        glm::vec3(0.0f, 0.0f, 0.0f),
-                                        11,
-                                        coutText[lastCoutText],
-                                        "fonts/JetBrainsMonoNerdFont-Regular.ttf",
-                                        glm::vec3(1.0f, 1.0f, 1.0f));
+  if (!finishedIntro) {
+    if ((std::floor(time * 10.0f)) > lastCoutText && lastCoutText < coutText.size()) {
+      TextElement* text = new TextElement(glm::vec2(0.0f, 0.02f * lastCoutText),
+                                          glm::vec2(1.0f, 0.02f),
+                                          1.0f,
+                                          glm::vec3(0.0f, 0.0f, 0.0f),
+                                          11,
+                                          coutText[lastCoutText],
+                                          "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                          glm::vec3(1.0f, 1.0f, 1.0f));
 
-    text->textCentered = false;
-    text->registerObject();
+      text->textCentered = false;
+      text->registerObject();
 
-    cout.push_back(text);
+      cout.push_back(text);
 
-    lastCoutText++;
-  } else if (lastCoutText >= coutText.size()) {
-    for (TextElement* text : cout) {
-      text->pendDelete();
+      lastCoutText++;
+    } else if (lastCoutText >= coutText.size()) {
+      for (TextElement* text : cout) {
+        text->pendDelete();
+      }
+
+      cout.clear();
+
+      ui->changeVisibility(true);
+      finishedIntro = true;
     }
+  } else if (quitAnimation) {
+    if ((std::floor(time * 10.0f)) > lastCoutText && lastCoutText < quitCoutText.size()) {
+      TextElement* text = new TextElement(glm::vec2(0.0f, 0.02f * lastCoutText),
+                                          glm::vec2(1.0f, 0.02f),
+                                          1.0f,
+                                          glm::vec3(0.0f, 0.0f, 0.0f),
+                                          11,
+                                          quitCoutText[lastCoutText],
+                                          "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                          glm::vec3(1.0f, 1.0f, 1.0f));
 
-    cout.clear();
+      text->textCentered = false;
+      text->registerObject();
 
-    ui->changeVisibility(true);
-    finishedIntro = true;
+      cout.push_back(text);
+
+      lastCoutText++;
+    } else if (lastCoutText >= quitCoutText.size()) {
+      Window::inGame = false;
+      quitAnimation = false;
+    }
   }
 }
