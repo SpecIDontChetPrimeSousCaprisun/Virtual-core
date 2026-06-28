@@ -73,6 +73,7 @@ COMMON_SRC = \
 	src/Player.cpp \
 	src/Sound.cpp \
 	src/UIElement.cpp \
+	src/ScrollingElement.cpp \
 	src/Font.cpp \
 	src/TextElement.cpp \
 	src/Container.cpp \
@@ -84,7 +85,8 @@ COMMON_SRC = \
 	src/Inventory.cpp \
 	src/Health.cpp \
 	src/Intro.cpp \
-	src/EscapeMenu.cpp
+	src/EscapeMenu.cpp \
+	src/Tutorial.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)

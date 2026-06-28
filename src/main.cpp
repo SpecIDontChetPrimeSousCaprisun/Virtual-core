@@ -10,6 +10,7 @@
 #include "Health.h"
 #include "Intro.h"
 #include "EscapeMenu.h"
+#include "Tutorial.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,6 +28,7 @@ int main() {
   Health::init();
   Intro::init();
   EscapeMenu::init();
+  Tutorial::init();
 
   Window::mainLoop();
   Sound::unInit();

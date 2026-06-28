@@ -12,6 +12,8 @@
 #include "Health.h"
 #include "Intro.h"
 #include "EscapeMenu.h"
+#include "Tutorial.h"
+#include "ScrollingElement.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,6 +57,10 @@ int Window::init() {
   /* Make the window's context current */
   glfwMakeContextCurrent(window);
   glfwSwapInterval(0); 
+  glfwSetScrollCallback(window, [](GLFWwindow* window, double xoffset, double yoffset){
+    ScrollingElement::scrollCallback(window, xoffset, yoffset);
+    //Object::scrollCallback(window, xoffset, yoffset);
+  });
 
   #ifndef __EMSCRIPTEN__
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -169,6 +175,7 @@ void Window::updateFrame() {
   Health::update();
   Intro::update();
   EscapeMenu::update();
+  Tutorial::update();
 
   Object::drawAll();
 

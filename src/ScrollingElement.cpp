@@ -35,7 +35,7 @@ void ScrollingElement::scrollCallback(GLFWwindow* window, double xoffset, double
 
   for (ScrollingElement* scroll : scrolls) {
     std::cout << "a\n";
-    drawInfo* newInfo = scroll->beforeDrawing(new drawInfo(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f)));
+    drawInfo* newInfo = scroll->beforeDrawing();
 
     std::cout << mouseX << " " << mouseY << "\n";
     std::cout << newInfo->position.x << " " << newInfo->position.y << "\n";

@@ -2,6 +2,7 @@
 #include "UIElement.h"
 #include "Button.h"
 #include "Window.h"
+#include "Tutorial.h"
 
 Container* EscapeMenu::ui;
 bool EscapeMenu::isPressed = false;
@@ -39,7 +40,9 @@ void EscapeMenu::init() {
     }
   });
   tutorialsButton->setCallback([]() {
-    
+    opened = false;
+    ui->changeVisibility(opened);
+    Tutorial::open();
   });
 
   quitButton->textCentered = false;
