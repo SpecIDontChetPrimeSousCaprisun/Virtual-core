@@ -11,6 +11,7 @@
 #include "Inventory.h"
 #include "Health.h"
 #include "Intro.h"
+#include "EscapeMenu.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -156,22 +157,6 @@ void Window::updateFrame() {
   glViewport(0, 0, fbWidth, fbHeight);
 
   glClear(GL_COLOR_BUFFER_BIT);
- 
-  #ifdef __EMSCRIPTEN__
-  if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && !toggledMenu) {
-    menu->changeVisibility(!menu->objects[0]->visible);
-    toggledMenu = true;
-  } else if (glfwGetKey(window, GLFW_KEY_TAB) != GLFW_PRESS) {
-    toggledMenu = false;
-  }
-  #else
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !toggledMenu) {
-    menu->changeVisibility(!menu->objects[0]->visible);
-    toggledMenu = true;
-  } else if (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
-    toggledMenu = false;
-  }
-  #endif
 
   Object::registerAll();
 
@@ -183,6 +168,7 @@ void Window::updateFrame() {
   Inventory::update();
   Health::update();
   Intro::update();
+  EscapeMenu::update();
 
   Object::drawAll();
 
@@ -195,34 +181,6 @@ void em_loop() {
 }
 
 void Window::mainLoop() {
-  std::vector<Object*> menuElements;
-  
-  UIElement* menuBackground = new UIElement(glm::vec2(0.5f, 0.5f), glm::vec2(0.5f, 0.75f), 0.0f, "textures/Wallpaper.jpeg", 1);
-  TextElement* nameLabel = new TextElement(glm::vec2(0.5f, 0.1f), glm::vec2(0.5f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "GAME NAME HERE", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-  Button* exitButton = new Button(glm::vec2(0.5f, 0.9f), glm::vec2(0.5f, 0.1f), 0.0f, "textures/Wallpaper.jpeg", 2, "Exit", "fonts/Kenney Future Narrow.ttf", glm::vec3(1.0f, 0.0f, 0.0f));
-  Button* muteButton = new Button(glm::vec2(0.5f, 0.8f), glm::vec2(0.5f, 0.1f), 0.0f, "textures/Wallpaper.jpeg", 2, "Mute music", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-
-  exitButton->setCallback([]() {
-    inGame = false;
-  });
-
-  muteButton->setCallback([]() {
-    ma_sound_stop(music);
-  });
-
-  menuBackground->anchorPoint = glm::vec2(0.5f, 0.5f);
-  nameLabel->anchorPoint = glm::vec2(0.5f, 0.0f);
-  exitButton->anchorPoint = glm::vec2(0.5f, 1.0f);
-  muteButton->anchorPoint = glm::vec2(0.5f, 1.0f);
-  menuElements.push_back(menuBackground);
-  menuElements.push_back(nameLabel);
-  menuElements.push_back(exitButton);
-  menuElements.push_back(muteButton);
-
-  menu = new Container(menuElements);
-  menu->changeVisibility(false);
-  menu->registerObjects();
- 
   fpsLabel = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(0.25f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "FPS : 0", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
   //fpsLabel->registerObject();
 
@@ -230,34 +188,6 @@ void Window::mainLoop() {
 }
 #else
 void Window::mainLoop() { 
-  std::vector<Object*> menuElements;
-  
-  UIElement* menuBackground = new UIElement(glm::vec2(0.5f, 0.5f), glm::vec2(0.5f, 0.75f), 0.0f, "textures/Wallpaper.jpeg", 1);
-  TextElement* nameLabel = new TextElement(glm::vec2(0.5f, 0.1f), glm::vec2(0.5f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "GAME NAME HERE", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-  Button* exitButton = new Button(glm::vec2(0.5f, 0.9f), glm::vec2(0.5f, 0.1f), 0.0f, "textures/Wallpaper.jpeg", 2, "Exit", "fonts/Kenney Future Narrow.ttf", glm::vec3(1.0f, 0.0f, 0.0f));
-  Button* muteButton = new Button(glm::vec2(0.5f, 0.8f), glm::vec2(0.5f, 0.1f), 0.0f, "textures/Wallpaper.jpeg", 2, "Mute music", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
-
-  exitButton->setCallback([]() {
-    inGame = false;
-  });
-
-  muteButton->setCallback([]() {
-    ma_sound_stop(music);
-  });
-
-  menuBackground->anchorPoint = glm::vec2(0.5f, 0.5f);
-  nameLabel->anchorPoint = glm::vec2(0.5f, 0.0f);
-  exitButton->anchorPoint = glm::vec2(0.5f, 1.0f);
-  muteButton->anchorPoint = glm::vec2(0.5f, 1.0f);
-  menuElements.push_back(menuBackground);
-  menuElements.push_back(nameLabel);
-  menuElements.push_back(exitButton);
-  menuElements.push_back(muteButton);
-
-  menu = new Container(menuElements);
-  menu->changeVisibility(false);
-  menu->registerObjects();
-
   fpsLabel = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(0.25f, 0.1f), 1.0f, "textures/Wallpaper.jpeg", 2, "FPS : 0", "fonts/Kenney Future Narrow.ttf", glm::vec3(0.0f, 0.0f, 0.0f));
   //fpsLabel->registerObject();
 

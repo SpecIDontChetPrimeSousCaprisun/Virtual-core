@@ -9,6 +9,7 @@
 #include "Inventory.h"
 #include "Health.h"
 #include "Intro.h"
+#include "EscapeMenu.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -25,6 +26,7 @@ int main() {
   Inventory::init();
   Health::init();
   Intro::init();
+  EscapeMenu::init();
 
   Window::mainLoop();
   Sound::unInit();
