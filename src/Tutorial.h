@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "TextElement.h"
+#include "Button.h"
 #include "ScrollingElement.h"
 
 class Tutorial {
@@ -13,8 +13,7 @@ public:
   static void update();
 private:
   static std::vector<std::string> tutorials;
-  static std::vector<TextElement*> texts;
-  static TextElement* currentText;
+  static Button* currentText;
   static ScrollingElement* background;
   static float time;
   static float lastTime;
