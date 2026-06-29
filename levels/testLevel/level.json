@@ -1,0 +1,35 @@
+[
+  {
+    "type": "Player",
+    "position": [
+      0,
+      0
+    ],
+    "size": [
+      100,
+      100
+    ],
+    "transparency": 0,
+    "texture": "textures/player.png",
+    "zIndex": 2,
+    "isCurrentPlayer": true,
+    "canCollide": true,
+    "anchored": false
+  },
+  {
+    "type": "Object",
+    "position": [
+      -500,
+      500
+    ],
+    "size": [
+      1000,
+      1000
+    ],
+    "transparency": 0,
+    "texture": "textures/Wallpaper.jpeg",
+    "zIndex": 1,
+    "canCollide": true,
+    "anchored": true
+  }
+]

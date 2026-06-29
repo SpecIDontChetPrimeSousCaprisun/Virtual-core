@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "Player.h"
 #include "Item.h"
+#include "LevelLoader.h"
 
 std::vector<std::string> Intro::coutText;
 std::vector<std::string> Intro::quitCoutText;
@@ -191,7 +192,7 @@ void Intro::init() {
   startButton->setCallback([]() {
     ui->changeVisibility(false);
     background->visible = false;
-
+    /*
     Player* plr = new Player(glm::vec2(0.0f, 0.0f), glm::vec2(100.0f, 100.0f), 0.0f, "textures/player.png", 2, true);
     Object* obj2 = new Object(glm::vec2(300.0f, 0.0f), glm::vec2(100.0f, 10000.0f), 0.0f, "textures/box.png", 2);
     Object* platform = new Object(glm::vec2(-500.0f, 500.0f), glm::vec2(1000.0f, 1000.0f), 0.0f, "textures/Wallpaper.jpeg", 1);
@@ -215,7 +216,8 @@ void Intro::init() {
     background->registerObject();
 
     item->registerObject();
-    item2->registerObject();
+    item2->registerObject();*/
+    LevelLoader::loadLevel("levels/testLevel");
   });
 
   continueButton->textCentered = false;

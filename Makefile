@@ -86,7 +86,8 @@ COMMON_SRC = \
 	src/Health.cpp \
 	src/Intro.cpp \
 	src/EscapeMenu.cpp \
-	src/Tutorial.cpp
+	src/Tutorial.cpp \
+	src/LevelLoader.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)
