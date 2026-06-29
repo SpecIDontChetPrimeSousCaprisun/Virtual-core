@@ -23,17 +23,6 @@ Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::stri
 
 void Player::update() {
   if (!currentPlayer) return;
-  if (!healthBar) {
-    healthBar = new UIElement(glm::vec2(0.02f, 0.98f), glm::vec2(0.33f, 0.03f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f), 2);
-    healthBar->anchorPoint = glm::vec2(0.0f, 1.0f);
-    healthBar->registerObject();
-
-    healthBarBackground = new UIElement(glm::vec2(0.01f, 0.99f), glm::vec2(0.35f, 0.05f), 0.25f, glm::vec3(0.25f, 0.25f, 0.25f), 1);
-    healthBarBackground->anchorPoint = glm::vec2(0.0f, 1.0f);
-    healthBarBackground->registerObject();
-  } else {
-    healthBar->size.x = std::max((currentPlayer->health / currentPlayer->maxHealth) * 0.33f, 0.0f);
-  }
 
   glm::vec2 hitPoint;
   float tHit;

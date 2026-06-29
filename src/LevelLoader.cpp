@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Player.h"
+#include "Item.h"
 
 #include <fstream>
 
@@ -72,6 +73,7 @@ Object* LevelLoader::parseEntry(json entry) {
   int zIndex = entry.at("zIndex").get<int>();
   bool canCollide = entry.at("canCollide").get<bool>();
   bool anchored = entry.at("anchored").get<bool>();
+  float parallax = entry.at("parallaxFactor").get<float>();
 
   Object* obj;
 
@@ -80,6 +82,9 @@ Object* LevelLoader::parseEntry(json entry) {
   } else if (type == "Player") {
     obj = new Player(position, size, transparency, texture, zIndex,
                      entry.at("isCurrentPlayer").get<bool>());
+  } else if (type == "Item") {
+    obj = new Item(position, size, transparency, texture, zIndex,
+                     entry.at("name").get<std::string>());
   } else {
     std::cerr << "Error in loading level : " + type + "is not a valid object type.\n";
   }
@@ -88,6 +93,7 @@ Object* LevelLoader::parseEntry(json entry) {
 
   obj->canCollide = canCollide;
   obj->anchored = anchored;
+  obj->parallaxFactor = parallax;
 
   return obj;
 }

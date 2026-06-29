@@ -14,7 +14,8 @@
     "zIndex": 2,
     "isCurrentPlayer": true,
     "canCollide": true,
-    "anchored": false
+    "anchored": false,
+    "parallaxFactor": 1
   },
   {
     "type": "Object",
@@ -30,6 +31,77 @@
     "texture": "textures/Wallpaper.jpeg",
     "zIndex": 1,
     "canCollide": true,
-    "anchored": true
+    "anchored": true,
+    "parallaxFactor": 1
+  },
+  {
+    "type": "Object",
+    "position": [
+      300,
+      0
+    ],
+    "size": [
+      100,
+      1000
+    ],
+    "transparency": 0,
+    "texture": "textures/box.png",
+    "zIndex": 1,
+    "canCollide": true,
+    "anchored": true,
+    "parallaxFactor": 1
+  },
+  {
+    "type": "Object",
+    "position": [
+      -750,
+      250
+    ],
+    "size": [
+      1500,
+      1500
+    ],
+    "transparency": 0,
+    "texture": "textures/Wallpaper.jpeg",
+    "zIndex": -1,
+    "canCollide": false,
+    "anchored": true,
+    "parallaxFactor": 5
+  },
+  {
+    "type": "Item",
+    "position": [
+      0,
+      0
+    ],
+    "size": [
+      100,
+      50
+    ],
+    "transparency": 0,
+    "texture": "textures/player.png",
+    "zIndex": 1,
+    "name": "test",
+    "canCollide": false,
+    "anchored": true,
+    "parallaxFactor": 1
+  },
+  {
+    "type": "Item",
+    "position": [
+      150,
+      0
+    ],
+    "size": [
+      100,
+      50
+    ],
+    "transparency": 0,
+    "texture": "textures/player.png",
+    "zIndex": 1,
+    "name": "test",
+    "canCollide": false,
+    "anchored": true,
+    "parallaxFactor": 1
   }
 ]
