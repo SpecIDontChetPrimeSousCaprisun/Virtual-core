@@ -10,10 +10,7 @@
 std::vector<Object*> LevelLoader::currentLevel;
 
 std::vector<Object*> LevelLoader::loadLevel(std::string path) {
-  for (Object* object : currentLevel) {
-    object->pendDelete();
-  }
-
+  clearCurrentLevel();
   return addLevel(path);
 }
 
@@ -25,7 +22,7 @@ std::vector<Object*> LevelLoader::addLevel(std::string path) {
     return currentLevel;
   }
 
-  currentLevel.clear();
+  
 
   json data;
   dataFile >> data;
@@ -41,6 +38,14 @@ std::vector<Object*> LevelLoader::addLevel(std::string path) {
 
   currentLevel = level;
   return level;
+}
+
+void LevelLoader::clearCurrentLevel() {
+  for (Object* object : currentLevel) {
+    object->pendDelete();
+  }
+
+  currentLevel.clear();
 }
 
 std::vector<Object*> LevelLoader::loadProceduralLevel(std::string path) {
