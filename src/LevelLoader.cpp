@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Player.h"
 #include "Item.h"
+#include "KillBox.h"
 
 #include <fstream>
 
@@ -88,7 +89,9 @@ Object* LevelLoader::parseEntry(json entry) {
                      entry.at("isCurrentPlayer").get<bool>());
   } else if (type == "Item") {
     obj = new Item(position, size, transparency, texture, zIndex,
-                     entry.at("name").get<std::string>());
+                   entry.at("name").get<std::string>());
+  } else if (type == "KillBox" || type == "Killbox") {
+    obj = new KillBox(position, size, zIndex);
   } else {
     std::cerr << "Error in loading level : " + type + "is not a valid object type.\n";
   }

@@ -87,7 +87,8 @@ COMMON_SRC = \
 	src/Intro.cpp \
 	src/EscapeMenu.cpp \
 	src/Tutorial.cpp \
-	src/LevelLoader.cpp
+	src/LevelLoader.cpp \
+	src/KillBox.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)
@@ -96,7 +97,8 @@ WEB_SRC = $(COMMON_SRC)
 # Remove glad.c because emscripten provides OpenGL bindings
 PUBLISH_SRC = textures \
 							fonts \
-							shaders
+							shaders \
+							levels
 
 # Object files
 OBJ_DIR = build
@@ -139,6 +141,7 @@ web:
 	--preload-file fonts \
 	--preload-file shaders \
 	--preload-file sfx \
+	--preload-file levels \
 	-o $(WEB_TARGET)
 
 test: CXXFLAGS += $(TEST_CXXFLAGS)

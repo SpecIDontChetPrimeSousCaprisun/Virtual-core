@@ -48,7 +48,6 @@ void Object::drawAll() {
     }
   } 
 
-  
   if (blurry) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -94,6 +93,12 @@ void Object::drawAll() {
 }
 
 void Object::updateAll() {
+  for (auto& [zIndex, objectsVector] : objects) {
+    for (Object* object : objectsVector) {
+      object->lastCollides.clear();
+    }
+  }
+
   for (auto& [zIndex, objectsVector] : objects) {
     for (Object* object : objectsVector) {
       object->update();
@@ -800,7 +805,7 @@ void Object::update() {
       for (auto& [zIndex, objectsVector] : objects) {
         for (Object* object : objectsVector) {
           if (object == this) continue;
-          if (!object->canCollide) continue;
+
           float aRadians = rotation * glm::pi<float>() / 180.0f;
 
           glm::vec2 Ax(
@@ -856,6 +861,11 @@ void Object::update() {
           if (o4 < minOverlap) { minOverlap = o4; bestAxis = By; }
           
           if (!(o1 <= 0 || o2 <= 0 || o3 <= 0 || o4 <= 0)) {
+            lastCollides.push_back(object);
+            object->lastCollides.push_back(this);
+
+            if (!object->canCollide) continue;
+
             glm::vec2 correction = bestAxis * minOverlap;
             glm::vec2 centerA = position + WH;
             glm::vec2 centerB = object->position + WHb;

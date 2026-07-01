@@ -35,7 +35,7 @@
     "parallaxFactor": 1
   },
   {
-    "type": "Object",
+    "type": "Killbox",
     "position": [
       300,
       0
@@ -46,8 +46,8 @@
     ],
     "transparency": 0,
     "texture": "textures/box.png",
-    "zIndex": 1,
-    "canCollide": true,
+    "zIndex": 3,
+    "canCollide": false,
     "anchored": true,
     "parallaxFactor": 1
   },

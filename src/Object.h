@@ -61,6 +61,7 @@ protected:
   virtual void beforeUpdate();
   virtual void afterUpdate();
 
+  std::vector<Object*> lastCollides;
   glm::vec3 colorChange;
   glm::vec2 lastCorrection;
   float gravity;
