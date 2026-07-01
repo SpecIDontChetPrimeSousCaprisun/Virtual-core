@@ -69,6 +69,7 @@ void EscapeMenu::init() {
 void EscapeMenu::update() {
   if (glfwGetKey(Window::window, GLFW_KEY_ESCAPE) && !isPressed) {
     Tutorial::close();
+    Tutorial::remove();
     opened = !opened;
     ui->changeVisibility(opened);
     isPressed = true;

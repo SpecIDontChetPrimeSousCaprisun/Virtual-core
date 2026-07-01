@@ -1,9 +1,14 @@
 #include "Tutorial.h"
 #include "Window.h"
+#include "LevelLoader.h"
 
 #include <cmath>
+#include <sstream>
+#include <fstream>
 
+std::vector<Object*> Tutorial::currentTutorial;
 std::vector<std::string> Tutorial::tutorials;
+Player* Tutorial::oldPlayer;
 Button* Tutorial::currentText;
 ScrollingElement* Tutorial::background;
 float Tutorial::time;
@@ -11,11 +16,12 @@ float Tutorial::lastTime;
 bool Tutorial::inOpenAnimation;
 
 void Tutorial::init() {
-  tutorials.push_back("lorem");
-  tutorials.push_back("ipsum");
-  tutorials.push_back("sit");
-  tutorials.push_back("amet");
-  tutorials.push_back("dolor");
+  std::ifstream indexStream("levels/tutorials.index");
+  std::string line;
+
+  while (std::getline(indexStream, line)) {
+    tutorials.push_back(line);
+  }
 
   background = new ScrollingElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 100);
   background->visible = false;
@@ -46,6 +52,17 @@ void Tutorial::close() {
   background->visible = false;
 }
 
+void Tutorial::remove() {
+  if (!oldPlayer) return;
+
+  for (Object* object : currentTutorial) {
+    object->pendDelete();
+  }
+
+  currentTutorial.clear();
+  Player::currentPlayer = oldPlayer;
+}
+
 void Tutorial::update() {
   if (inOpenAnimation) {
     time += Window::deltaTime;
@@ -74,8 +91,10 @@ void Tutorial::update() {
           newButton->text = text;
         }
       });
-      currentText->setCallback([]() {
-      
+      newButton->setCallback([text]() {
+        oldPlayer = Player::currentPlayer;
+        currentTutorial = LevelLoader::addLevel("levels/" + text);
+        close();
       });
 
       background->elements.push_back(currentText);

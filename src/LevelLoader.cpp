@@ -9,15 +9,19 @@
 std::vector<Object*> LevelLoader::currentLevel;
 
 std::vector<Object*> LevelLoader::loadLevel(std::string path) {
+  for (Object* object : currentLevel) {
+    object->pendDelete();
+  }
+
+  return addLevel(path);
+}
+
+std::vector<Object*> LevelLoader::addLevel(std::string path) {
   std::ifstream dataFile(path + "/data.json");
 
   if (!dataFile.is_open()) {
     std::cerr << "Couldn't open path " + path + "/data.json\n";
     return currentLevel;
-  }
-
-  for (Object* object : currentLevel) {
-    object->pendDelete();
   }
 
   currentLevel.clear();
