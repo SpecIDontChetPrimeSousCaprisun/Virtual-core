@@ -10,6 +10,7 @@ class Tutorial {
 public:
   static void init();
   static void open();
+  static void close();
   static void update();
 private:
   static std::vector<std::string> tutorials;

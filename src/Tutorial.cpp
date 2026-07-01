@@ -23,10 +23,27 @@ void Tutorial::init() {
 }
 
 void Tutorial::open() {
+  for (UIElement* element : background->elements) {
+    element->pendDelete();
+  }
+
+  background->elements.clear();
+
   time = 0.0f;
   lastTime = 0.0f;
   inOpenAnimation = true;
   background->visible = true;
+}
+
+void Tutorial::close() {
+  for (UIElement* element : background->elements) {
+    element->pendDelete();
+  }
+
+  background->elements.clear();
+
+  inOpenAnimation = false;
+  background->visible = false;
 }
 
 void Tutorial::update() {
@@ -34,7 +51,7 @@ void Tutorial::update() {
     time += Window::deltaTime;
     background->visible = true;
 
-    if (std::floor(time / 0.5f) > lastTime && lastTime < tutorials.size()) { 
+    if (std::floor(time / 0.1f) > lastTime && lastTime < tutorials.size()) { 
       if (currentText) currentText->textTransparency = 0.0f; 
 
       std::string text = tutorials[lastTime];
@@ -66,9 +83,9 @@ void Tutorial::update() {
       currentText->textTransparency = 1.0f;
       currentText->registerObject();
 
-      lastTime = std::floor(time / 0.5f);
-    } else if (currentText && (time / 0.5f) - lastTime <= 1.0f) {
-      currentText->textTransparency = 1 - ((time / 0.5f) - lastTime);
+      lastTime = std::floor(time / 0.1f);
+    } else if (currentText && (time / 0.1f) - lastTime <= 1.0f) {
+      currentText->textTransparency = 1 - ((time / 0.1f) - lastTime);
     }
   }
 }
