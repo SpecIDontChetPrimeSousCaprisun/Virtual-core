@@ -14,6 +14,7 @@
 #include "EscapeMenu.h"
 #include "Tutorial.h"
 #include "ScrollingElement.h"
+#include "DeathScreen.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -176,6 +177,7 @@ void Window::updateFrame() {
   Intro::update();
   EscapeMenu::update();
   Tutorial::update();
+  DeathScreen::update();
 
   Object::drawAll();
 

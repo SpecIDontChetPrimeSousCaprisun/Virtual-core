@@ -1,5 +1,6 @@
 #include "Health.h"
 #include "Window.h"
+#include "DeathScreen.h"
 
 #include <cmath>
 
@@ -262,4 +263,8 @@ void Health::update() {
 
 void Health::dealDmgToBodyPart(std::string bodyPart, float dmg) {
   bodyPartHealth[bodyPart] -= dmg;
+
+  if (bodyPartHealth["head"] <= 0) {
+    DeathScreen::play();
+  }
 }

@@ -1,9 +1,13 @@
 #include "DeathScreen.h"
 #include "LevelLoader.h"
+#include "Window.h"
 
 std::vector<TextElement*> DeathScreen::cout;
 std::vector<std::string> DeathScreen::coutText;
 UIElement* DeathScreen::background;
+bool DeathScreen::isPlaying = false;
+float DeathScreen::time = 0.0f;
+float DeathScreen::lastCoutText;
 
 void DeathScreen::init() {
   coutText.push_back("[ critical ] Subject stopped responding");
@@ -20,13 +24,40 @@ void DeathScreen::init() {
   coutText.push_back("[ ok ] Initiating self destruction….");
 
   background = new UIElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 999);
+  background->visible = false;
+  background->registerObject();
 }
 
 void DeathScreen::play() {
   background->visible = true;
   LevelLoader::clearCurrentLevel();
+  isPlaying = true;
+  time = 0.0f;
+  lastCoutText = 0.0f;
 }
 
 void DeathScreen::update() {
+  if (isPlaying) {
+    time += Window::deltaTime;
+  
+    if ((std::floor(time * 10.0f)) > lastCoutText && lastCoutText < coutText.size()) {
+      TextElement* text = new TextElement(glm::vec2(0.0f, 0.02f * lastCoutText),
+                                          glm::vec2(1.0f, 0.02f),
+                                          1.0f,
+                                          glm::vec3(0.0f, 0.0f, 0.0f),
+                                          1000,
+                                          coutText[lastCoutText],
+                                          "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                          glm::vec3(1.0f, 1.0f, 1.0f));
 
+      text->textCentered = false;
+      text->registerObject();
+
+      cout.push_back(text);
+
+      lastCoutText++;
+    } else if (lastCoutText >= coutText.size()) {
+      isPlaying = false;
+    }
+  }
 }

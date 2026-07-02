@@ -88,7 +88,8 @@ COMMON_SRC = \
 	src/EscapeMenu.cpp \
 	src/Tutorial.cpp \
 	src/LevelLoader.cpp \
-	src/KillBox.cpp
+	src/KillBox.cpp \
+	src/DeathScreen.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)

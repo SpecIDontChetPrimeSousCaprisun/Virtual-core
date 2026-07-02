@@ -15,4 +15,7 @@ private:
   static std::vector<TextElement*> cout;
   static std::vector<std::string> coutText;
   static UIElement* background;
-}
+  static bool isPlaying;
+  static float time;
+  static float lastCoutText;
+};

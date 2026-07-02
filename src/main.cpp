@@ -11,6 +11,7 @@
 #include "Intro.h"
 #include "EscapeMenu.h"
 #include "Tutorial.h"
+#include "DeathScreen.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,6 +30,7 @@ int main() {
   Intro::init();
   EscapeMenu::init();
   Tutorial::init();
+  DeathScreen::init();
 
   Window::mainLoop();
   Sound::unInit();
