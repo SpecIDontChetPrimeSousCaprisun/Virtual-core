@@ -10,6 +10,7 @@
 class Intro {
 public:
   static void init();
+  static void open();
   static void update();
 private:
   static std::vector<std::string> coutText;

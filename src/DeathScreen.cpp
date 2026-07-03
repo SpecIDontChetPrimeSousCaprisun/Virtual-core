@@ -1,6 +1,7 @@
 #include "DeathScreen.h"
 #include "LevelLoader.h"
 #include "Window.h"
+#include "Intro.h"
 
 std::vector<TextElement*> DeathScreen::cout;
 std::vector<std::string> DeathScreen::coutText;
@@ -58,6 +59,12 @@ void DeathScreen::update() {
       lastCoutText++;
     } else if (lastCoutText >= coutText.size()) {
       isPlaying = false;
+      Intro::open();
+      background->visible = false;
+      for (TextElement* text : cout) {
+        text->pendDelete();
+      }
+      cout.clear();
     }
   }
 }

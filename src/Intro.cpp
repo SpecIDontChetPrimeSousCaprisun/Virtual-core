@@ -223,6 +223,12 @@ void Intro::init() {
   ui->registerObjects();
 }
 
+void Intro::open() {
+  time = 0;
+  background->visible = true;
+  finishedIntro = false;
+}
+
 void Intro::update() {
   time += Window::deltaTime;
 
