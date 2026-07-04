@@ -598,6 +598,8 @@ void Object::init() {
   gravity = 500.0f;
   cornerRadius = 0.0f;
   parallaxFactor = 1.0f;
+  collisionGroup = CollisionGroup::Default;
+  collisionMask = CollisionGroup::Default;
 }
 
 void Object::registerObject() {
@@ -805,6 +807,7 @@ void Object::update() {
       for (auto& [zIndex, objectsVector] : objects) {
         for (Object* object : objectsVector) {
           if (object == this) continue;
+          if (object->collisionGroup != collisionMask) continue;
 
           float aRadians = rotation * glm::pi<float>() / 180.0f;
 

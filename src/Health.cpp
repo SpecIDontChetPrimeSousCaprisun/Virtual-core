@@ -284,6 +284,7 @@ void Health::updateEffects() {
   bool dead = false;
   bool blur = false;
   float speedMult = 1.0f;
+  float inventoryMult = 1.0f;
 
   if (bodyPartHealth["head"] <= 0) {
     dead = true;
@@ -297,6 +298,10 @@ void Health::updateEffects() {
   limbs.push_back("right");
 
   for (std::string limb : limbs) {
+    if (bodyPartHealth[limb + " hand"] <= 50) {
+      inventoryMult -= 0.5f;
+    }
+
     if (bodyPartHealth[limb + " thigh"] <= 50) {
       speedMult -= 0.1f;
     }

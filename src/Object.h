@@ -11,6 +11,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>
 
+#include "CollisionGroup.h"
+
 struct drawInfo {
 public:
   drawInfo(glm::vec2 position, glm::vec2 size);
@@ -66,6 +68,8 @@ protected:
   glm::vec2 lastCorrection;
   float gravity;
   bool pendingDelete;
+  CollisionGroup collisionGroup;
+  CollisionGroup collisionMask;
 private:
   static std::vector<Object*> registerQueue;
   static std::map<int, std::vector<Object*>> objects;

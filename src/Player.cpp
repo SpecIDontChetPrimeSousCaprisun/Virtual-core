@@ -17,6 +17,7 @@ Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::stri
   : Object(position, size, transparency, texPath, zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f), speedMult(1.0f) {
   anchored = false;
   canCollide = true;
+  collisionGroup = CollisionGroup::Player;
 
   if (isCurrentPlayer) currentPlayer = this;
 }

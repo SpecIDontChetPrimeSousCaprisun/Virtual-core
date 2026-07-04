@@ -16,8 +16,9 @@ Item::Item(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 col
 }
 
 void Item::initObject() {
-  anchored = true;
-  canCollide = false;
+  anchored = false;
+  canCollide = true;
+  collisionGroup = CollisionGroup::Item;
   size = glm::vec2(1.0f, 2.0f);
 }
 

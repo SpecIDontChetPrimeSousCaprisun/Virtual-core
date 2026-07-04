@@ -82,8 +82,8 @@
     "texture": "textures/player.png",
     "zIndex": 1,
     "name": "test",
-    "canCollide": false,
-    "anchored": true,
+    "canCollide": true,
+    "anchored": false,
     "parallaxFactor": 1
   },
   {
@@ -100,8 +100,8 @@
     "texture": "textures/player.png",
     "zIndex": 1,
     "name": "test",
-    "canCollide": false,
-    "anchored": true,
+    "canCollide": true,
+    "anchored": false,
     "parallaxFactor": 1
   }
 ]
