@@ -911,7 +911,8 @@ Object* Object::raycast(
     const glm::vec2& direction,
     glm::vec2& hitPoint,
     float& tHit,
-    const std::vector<Object*>& ignore
+    const std::vector<Object*>& ignore,
+    CollisionGroup mask
 ) {
     Object* closestObject = nullptr;
     float closestT = 1.0f;
@@ -925,6 +926,8 @@ Object* Object::raycast(
 
             if (!object->canCollide)
                 continue;
+
+            if (object->collisionGroup != mask) continue;
 
             // =========================
             // Build OBB basis

@@ -44,7 +44,8 @@ public:
                           const glm::vec2& direction,
                           glm::vec2& hitPoint,
                           float& tHit,
-                          const std::vector<Object*>& ignore
+                          const std::vector<Object*>& ignore,
+                          CollisionGroup mask = CollisionGroup::Default
                         );
 
   void registerObject();

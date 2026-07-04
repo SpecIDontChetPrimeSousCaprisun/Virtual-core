@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Item.h"
 #include "KillBox.h"
+#include "Enemy.h"
 
 #include <fstream>
 
@@ -85,7 +86,7 @@ Object* LevelLoader::parseEntry(json entry) {
   bool anchored = entry.at("anchored").get<bool>();
   float parallax = entry.at("parallaxFactor").get<float>();
 
-  Object* obj;
+  Object* obj = nullptr;
 
   if (type == "Object") {
     obj = new Object(position, size, transparency, texture, zIndex);
@@ -97,8 +98,10 @@ Object* LevelLoader::parseEntry(json entry) {
                    entry.at("name").get<std::string>());
   } else if (type == "KillBox" || type == "Killbox") {
     obj = new KillBox(position, size, zIndex);
+  } else if (type == "Enemy") {
+    obj = new Enemy(position, size, texture, zIndex);
   } else {
-    std::cerr << "Error in loading level : " + type + "is not a valid object type.\n";
+    std::cerr << "Error in loading level : " + type + " is not a valid object type.\n";
   }
 
   if (!obj) return nullptr;
