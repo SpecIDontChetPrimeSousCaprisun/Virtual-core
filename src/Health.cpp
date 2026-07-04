@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "DeathScreen.h"
 #include "Player.h"
+#include "Particle.h"
 
 #include <cmath>
 
@@ -262,8 +263,9 @@ void Health::update() {
   }
 }
 
-void Health::dealDmgToBodyPart(std::string bodyPart, float dmg) {
+void Health::dealDmgToBodyPart(std::string bodyPart, float dmg, bool particles) {
   bodyPartHealth[bodyPart] -= dmg;
+  if (particles) Particle::createParticles(Player::currentPlayer->position, glm::vec2(25.0f, 25.0f), 0.5f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, -100.0f), 100.0f, 1.0f, 10);
   
   updateEffects();
 }

@@ -13,7 +13,7 @@ class Health {
 public:
   static void init();
   static void update();
-  static void dealDmgToBodyPart(std::string bodyPart, float dmg);
+  static void dealDmgToBodyPart(std::string bodyPart, float dmg, bool particles);
   static void setBodyPartHealth(std::string bodyPart, float health);
   static void fullyHeal();
 private:

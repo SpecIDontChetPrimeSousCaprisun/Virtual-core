@@ -13,7 +13,7 @@ void KillBox::afterUpdate() {
 
     if (player) colliding = true;
     if (player && !wasColliding) {
-      Health::dealDmgToBodyPart("head", 50);
+      Health::dealDmgToBodyPart("head", 50, true);
     }
   }
 

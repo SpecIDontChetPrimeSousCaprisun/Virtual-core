@@ -117,21 +117,16 @@ void Player::update() {
     currentPlayer->position.x += currentPlayer->linearVelocity.x * Window::deltaTime;
   } else if (result || resultR || resultL) {
     currentPlayer->linearVelocity.x = 0.0f;
-
-    if (currentPlayer->linearVelocity.y > 10000.0f) {
-      Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 1000.0f);
-      currentPlayer->linearVelocity.y = 0.0f;
-    }
   }
 
   if ((result || resultR || resultL) && currentPlayer->linearVelocity.y > 500.0f && !dealtFallDamage) {
     dealtFallDamage = true;
-    Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 50.0f);
-    Health::dealDmgToBodyPart("right foot", currentPlayer->linearVelocity.y / 50.0f);
-    Health::dealDmgToBodyPart("left calf", currentPlayer->linearVelocity.y / 100.0f);
-    Health::dealDmgToBodyPart("right calf", currentPlayer->linearVelocity.y / 100.0f);
-    Health::dealDmgToBodyPart("left thigh", currentPlayer->linearVelocity.y / 250.0f);
-    Health::dealDmgToBodyPart("right thigh", currentPlayer->linearVelocity.y / 250.0f);
+    Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 50.0f, true);
+    Health::dealDmgToBodyPart("right foot", currentPlayer->linearVelocity.y / 50.0f, false);
+    Health::dealDmgToBodyPart("left calf", currentPlayer->linearVelocity.y / 100.0f, false);
+    Health::dealDmgToBodyPart("right calf", currentPlayer->linearVelocity.y / 100.0f, false);
+    Health::dealDmgToBodyPart("left thigh", currentPlayer->linearVelocity.y / 250.0f, false);
+    Health::dealDmgToBodyPart("right thigh", currentPlayer->linearVelocity.y / 250.0f, false);
   } else if (!(result || resultR || resultL)) {
     dealtFallDamage = false;
   }
