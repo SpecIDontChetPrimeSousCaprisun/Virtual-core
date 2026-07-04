@@ -14,7 +14,7 @@ UIElement* Player::healthBarBackground;
 bool Player::dealtFallDamage = false;
 
 Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, bool isCurrentPlayer) 
-  : Object(position, size, transparency, texPath, zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f) {
+  : Object(position, size, transparency, texPath, zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f), speedMult(1.0f) {
   anchored = false;
   canCollide = true;
 
@@ -139,9 +139,9 @@ void Player::update() {
   currentPlayer->lastJump -= Window::deltaTime;
 
   if (glfwGetKey(Window::window, GLFW_KEY_D) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
-    currentPlayer->linearVelocity.x = 250.0f;
+    currentPlayer->linearVelocity.x = 250.0f * currentPlayer->speedMult;
   } else if (glfwGetKey(Window::window, GLFW_KEY_A) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
-    currentPlayer->linearVelocity.x = -250.0f;
+    currentPlayer->linearVelocity.x = -250.0f * currentPlayer->speedMult;
   } else if (currentPlayer->state != "wallJumping" && (currentPlayer->linearVelocity.x == -250.0f || currentPlayer->linearVelocity.x == 250.0f)) {
     currentPlayer->linearVelocity.x = 0.0f;
   }

@@ -18,6 +18,7 @@ public:
   void setHealth(float health);
 
   float maxHealth;
+  float speedMult;
 protected:
   void beforeUpdate() override;
 private:

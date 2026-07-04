@@ -81,7 +81,7 @@ int Window::init() {
   );
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
 
-  glfwSetFramebufferSizeCallback(window,
+  /*glfwSetFramebufferSizeCallback(window,
   [](GLFWwindow*, int width, int height)
   {
       Window::fbWidth = width;
@@ -90,7 +90,7 @@ int Window::init() {
       resizing = (width == 0 || height == 0);
 
       glViewport(0, 0, width, height);
-  });
+  });*/
 
   //music = Sound::playLoopingSound("sfx/Music.mp3");
 

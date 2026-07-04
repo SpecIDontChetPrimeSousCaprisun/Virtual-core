@@ -78,12 +78,12 @@ void Object::drawAll() {
     glUseProgram(verticalBlurShaderProgram);
 
     glUniform1i(
-        glGetUniformLocation(blurShaderProgram, "scene"),
+        glGetUniformLocation(verticalBlurShaderProgram, "scene"),
         0
     );
 
     glUniform2f(
-        glGetUniformLocation(blurShaderProgram, "texelSize"),
+        glGetUniformLocation(verticalBlurShaderProgram, "texelSize"),
         texelW, texelH
     );
 

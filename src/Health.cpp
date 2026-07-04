@@ -1,6 +1,7 @@
 #include "Health.h"
 #include "Window.h"
 #include "DeathScreen.h"
+#include "Player.h"
 
 #include <cmath>
 
@@ -263,8 +264,59 @@ void Health::update() {
 
 void Health::dealDmgToBodyPart(std::string bodyPart, float dmg) {
   bodyPartHealth[bodyPart] -= dmg;
+  
+  updateEffects();
+}
+
+void Health::setBodyPartHealth(std::string bodyPart, float health) {
+  bodyPartHealth[bodyPart] = health;
+
+  updateEffects();
+}
+
+void Health::fullyHeal() {
+  for (auto& [bodyPart, health] : bodyPartHealth) {
+    bodyPartHealth[bodyPart] = 100;
+  }
+}
+
+void Health::updateEffects() {
+  bool dead = false;
+  bool blur = false;
+  float speedMult = 1.0f;
 
   if (bodyPartHealth["head"] <= 0) {
-    DeathScreen::play();
+    dead = true;
+  } else if (bodyPartHealth["head"] <= 50) {
+    blur = true;
   }
+
+  std::vector<std::string> limbs;
+
+  limbs.push_back("left");
+  limbs.push_back("right");
+
+  for (std::string limb : limbs) {
+    if (bodyPartHealth[limb + " thigh"] <= 50) {
+      speedMult -= 0.1f;
+    }
+
+    if (bodyPartHealth[limb + " calf"] <= 50) {
+      speedMult -= 0.3f;
+    }
+
+    if (bodyPartHealth[limb + " foot"] <= 50) {
+      speedMult -= 0.175f;
+    }
+  }
+
+  if (dead) {
+    Object::blurry = false;
+    fullyHeal();
+    DeathScreen::play();
+    return;
+  }
+
+  Object::blurry = blur;
+  Player::currentPlayer->speedMult = speedMult;
 }

@@ -3,12 +3,19 @@
 #include "Health.h"
 
 KillBox::KillBox(glm::vec2 position, glm::vec2 size, int zIndex) 
-        : Object(position, size, 0.5f, glm::vec3(1.0f, 0.0f, 0.0f), zIndex) {}
+        : Object(position, size, 0.5f, glm::vec3(1.0f, 0.0f, 0.0f), zIndex), wasColliding(false) {}
 
 void KillBox::afterUpdate() {
+  bool colliding = false;
+
   for (Object* obj : lastCollides) {
     Player* player = dynamic_cast<Player*>(obj);
 
-    if (player) Health::dealDmgToBodyPart("head", 100);
+    if (player) colliding = true;
+    if (player && !wasColliding) {
+      Health::dealDmgToBodyPart("head", 50);
+    }
   }
+
+  wasColliding = colliding;
 }

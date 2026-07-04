@@ -14,6 +14,8 @@ public:
   static void init();
   static void update();
   static void dealDmgToBodyPart(std::string bodyPart, float dmg);
+  static void setBodyPartHealth(std::string bodyPart, float health);
+  static void fullyHeal();
 private:
   static bool pressed;
   static bool playingOpenAnim;
@@ -25,4 +27,6 @@ private:
   static std::map<std::string, Button*> bodyParts;
   static std::map<std::string, float> bodyPartHealth;
   static Container* ui;
+
+  static void updateEffects();
 };
