@@ -11,7 +11,9 @@ UIElement* Inventory::background;
 UIElement* Inventory::hoverEffect;
 bool Inventory::isPressed = false;
 bool Inventory::visible = false;
+bool Inventory::rClickPressed = false;
 float Inventory::gridSize = 3;
+int Inventory::currentKey = 0;
 
 void Inventory::init() {
   std::vector<Object*> uiElements;
@@ -77,11 +79,20 @@ void Inventory::update() {
         Item* item = getItemAtGridPos(glm::vec2(tileX, tileY));
 
         if (item != nullptr) {
+          currentKey = GLFW_MOUSE_BUTTON_LEFT;
           selectedItem = item;
           eraseItem(item);
         }
-      } else if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+      } else if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && !rClickPressed) {
+        rClickPressed = true;
+
         Item* item = getItemAtGridPos(glm::vec2(tileX, tileY));
+        
+        if (Item::equippedItem != nullptr) {
+          selectedItem = Item::equippedItem;
+          Item::equippedItem = nullptr;
+          currentKey = GLFW_MOUSE_BUTTON_RIGHT;
+        }
         
         if (item != nullptr) {
           item->equip();
@@ -105,11 +116,11 @@ void Inventory::update() {
       if (isOccupied(&occupiedInfo)) {
         hoverEffect->color = glm::vec3(1.0f, 0.0f, 0.0f);
 
-        if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) dropCurrentItem();
+        if (glfwGetMouseButton(Window::window, currentKey) != GLFW_PRESS) dropCurrentItem();
       } else {
         hoverEffect->color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-        if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS) {
+        if (glfwGetMouseButton(Window::window, currentKey) != GLFW_PRESS) {
           InventoryPlaceInfo* info = new InventoryPlaceInfo();
 
           info->position = glm::vec2(tileX, tileY);
@@ -132,8 +143,10 @@ void Inventory::update() {
   } else {
     hoverEffect->visible = false;
 
-    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) != GLFW_PRESS && selectedItem) dropCurrentItem();
+    if (glfwGetMouseButton(Window::window, currentKey) != GLFW_PRESS && selectedItem) dropCurrentItem();
   }
+
+  if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS && rClickPressed) rClickPressed = false;
 }
 
 bool Inventory::isOccupied(InventoryPlaceInfo* info) {

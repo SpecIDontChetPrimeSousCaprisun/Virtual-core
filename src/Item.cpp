@@ -55,6 +55,7 @@ void Item::beforeUpdate() {
     wasSelected = true;
 
     if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+      Inventory::currentKey = GLFW_MOUSE_BUTTON_LEFT;
       Inventory::selectedItem = this;
       Inventory::visible = true;
     }
