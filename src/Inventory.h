@@ -24,6 +24,10 @@ public:
   static void update();
 private:
   static Container* ui;
+  static Container* sideUi;
+  static TextElement* itemNameLabel;
+  static TextElement* itemSizeLabel;
+  static UIElement* itemImage;
   static UIElement* background;
   static UIElement* hoverEffect;
   static bool isPressed;

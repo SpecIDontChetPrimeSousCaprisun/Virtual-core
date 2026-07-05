@@ -3,10 +3,16 @@
 #include "Player.h"
 
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
 std::map<InventoryPlaceInfo*, Item*> Inventory::items;
 Item* Inventory::selectedItem = nullptr;
 Container* Inventory::ui;
+Container* Inventory::sideUi;
+TextElement* Inventory::itemNameLabel;
+TextElement* Inventory::itemSizeLabel;
+UIElement* Inventory::itemImage;
 UIElement* Inventory::background;
 UIElement* Inventory::hoverEffect;
 bool Inventory::isPressed = false;
@@ -31,6 +37,44 @@ void Inventory::init() {
   ui = new Container(uiElements);
   ui->changeVisibility(false);
   ui->registerObjects();
+
+  std::vector<Object*> sideUiElements;
+
+  itemNameLabel = new TextElement(glm::vec2(0.0125f, 0.5f),
+                                  glm::vec2(0.15f, 0.04f),
+                                  1.0f,
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  10,
+                                  "Item name here",
+                                  "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                  glm::vec3(1.0f, 1.0f, 1.0f));
+
+  itemNameLabel->textCentered = false;
+
+  itemSizeLabel = new TextElement(glm::vec2(0.0125f, 0.52f),
+                                  glm::vec2(0.15f, 0.04f),
+                                  1.0f,
+                                  glm::vec3(0.0f, 0.0f, 0.0f),
+                                  10,
+                                  "Item size here",
+                                  "fonts/JetBrainsMonoNerdFont-Regular.ttf",
+                                  glm::vec3(0.7f, 0.7f, 0.7f));
+
+  itemSizeLabel->textCentered = false;
+
+  itemImage = new UIElement(glm::vec2(0.0125f, 0.56f),
+                            glm::vec2(0.1f, 0.1f),
+                            0.0f,
+                            "textures/Wallpaper.jpeg",
+                            10);
+
+  sideUiElements.push_back(itemNameLabel);
+  sideUiElements.push_back(itemSizeLabel);
+  sideUiElements.push_back(itemImage);
+
+  sideUi = new Container(sideUiElements);
+  sideUi->changeVisibility(false);
+  sideUi->registerObjects();
 }
 
 void Inventory::update() {
@@ -147,6 +191,18 @@ void Inventory::update() {
   }
 
   if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_PRESS && rClickPressed) rClickPressed = false;
+
+  if (Item::equippedItem != nullptr) {
+    sideUi->changeVisibility(visible);
+    itemNameLabel->text = Item::equippedItem->name;
+    itemImage->changeTexture(Item::equippedItem->texPath);
+
+    std::ostringstream ss;
+    ss << std::fixed << std::setprecision(0) << Item::equippedItem->size.x << "x" << Item::equippedItem->size.y;
+    std::string str = ss.str();
+
+    itemSizeLabel->text = str;
+  } else sideUi->changeVisibility(false);
 }
 
 bool Inventory::isOccupied(InventoryPlaceInfo* info) {

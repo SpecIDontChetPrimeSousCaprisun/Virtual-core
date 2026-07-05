@@ -1022,3 +1022,11 @@ void Object::pendDelete() {
 bool Object::isDeleted() {
   return pendingDelete;
 }
+
+void Object::changeTexture(std::string newTexPath) {
+  if (!usesColor) glDeleteTextures(1, &texture);
+
+  texPath = newTexPath;
+  texture = FileLoader::loadTexture(newTexPath);
+  usesColor = false;
+}

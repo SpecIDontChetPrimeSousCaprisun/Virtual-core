@@ -50,6 +50,7 @@ public:
 
   void registerObject();
   void pendDelete();
+  void changeTexture(std::string newTexPath);
   bool isDeleted();
 
   glm::vec2 position, size, linearVelocity;
