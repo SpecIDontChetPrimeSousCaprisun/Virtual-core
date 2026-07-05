@@ -4,6 +4,7 @@
 
 TextElement* Item::interactionElement;
 bool Item::wasSelected;
+Item* Item::equippedItem = nullptr;
 
 Item::Item(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name) 
   : Object(position, size, transparency, texPath, zIndex), name(name) {
@@ -58,4 +59,9 @@ void Item::beforeUpdate() {
       Inventory::visible = true;
     }
   }
+}
+
+void Item::equip() {
+  equippedItem = this;
+  std::cout << "Equiped !\n";
 }

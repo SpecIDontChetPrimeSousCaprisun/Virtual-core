@@ -11,6 +11,10 @@ public:
   static void init();
   static void update();
 
+  static Item* equippedItem;
+
+  virtual void equip();
+
   std::string name;
   glm::vec2 size;
 protected:

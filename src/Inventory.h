@@ -31,4 +31,5 @@ private:
   static bool isOccupied(InventoryPlaceInfo* info);
   static Item* getItemAtGridPos(glm::vec2 position);
   static void dropCurrentItem();
+  static void eraseItem(Item* item);
 };

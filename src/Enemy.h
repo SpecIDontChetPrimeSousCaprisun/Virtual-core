@@ -10,5 +10,7 @@ public:
 protected:
    void beforeUpdate() override;
 private:
-   float lastAttack;
+  bool shouldMoveToPlayer();
+
+  float lastAttack;
 };

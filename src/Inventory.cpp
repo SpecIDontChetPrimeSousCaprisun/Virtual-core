@@ -78,16 +78,14 @@ void Inventory::update() {
 
         if (item != nullptr) {
           selectedItem = item;
-          for (auto it = items.begin(); it != items.end(); ++it) {
-            if (it->second == item) {
-              InventoryPlaceInfo* slot = it->first;
-
-              slot->element->pendDelete();          // destroy key object
-              items.erase(it);      // remove from map
-
-              break;
-            }
-          }
+          eraseItem(item);
+        }
+      } else if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+        Item* item = getItemAtGridPos(glm::vec2(tileX, tileY));
+        
+        if (item != nullptr) {
+          item->equip();
+          eraseItem(item);
         }
       }
     } else {
@@ -179,4 +177,17 @@ void Inventory::dropCurrentItem() {
   selectedItem->position = Player::currentPlayer->position;
   selectedItem->visible = true;
   selectedItem = nullptr;
+}
+
+void Inventory::eraseItem(Item* item) {
+  for (auto it = items.begin(); it != items.end(); ++it) {
+    if (it->second == item) {
+      InventoryPlaceInfo* slot = it->first;
+
+      slot->element->pendDelete();          // destroy key object
+      items.erase(it);      // remove from map
+
+      break;
+    }
+  }
 }

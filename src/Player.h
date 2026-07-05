@@ -19,6 +19,7 @@ public:
 
   float maxHealth;
   float speedMult;
+  Object* currentGround;
 protected:
   void beforeUpdate() override;
 private:

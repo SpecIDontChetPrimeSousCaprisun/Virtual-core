@@ -131,6 +131,10 @@ void Player::update() {
     dealtFallDamage = false;
   }
 
+  if (result) currentPlayer->currentGround = result;
+  else if (resultR) currentPlayer->currentGround = resultR;
+  else if (resultL) currentPlayer->currentGround = resultL;
+  else currentPlayer->currentGround = nullptr;
 
   currentPlayer->lastJump -= Window::deltaTime;
 
