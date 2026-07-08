@@ -103,7 +103,7 @@
     "parallaxFactor": 1
   },
   {
-    "type": "Item",
+    "type": "Gun",
     "position": [
       150,
       0
@@ -113,9 +113,9 @@
       50
     ],
     "transparency": 0,
-    "texture": "textures/player.png",
+    "texture": "textures/box.png",
     "zIndex": 1,
-    "name": "test",
+    "name": "test gun",
     "canCollide": true,
     "anchored": false,
     "parallaxFactor": 1

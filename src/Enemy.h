@@ -4,11 +4,11 @@
 
 class Enemy : public Object {
 public:
-   Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex);
+  Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex);
 
-   float damage, speed, cooldown;
+  float damage, speed, cooldown;
 protected:
-   void beforeUpdate() override;
+  void beforeUpdate() override;
 private:
   bool shouldMoveToPlayer();
 

@@ -59,19 +59,24 @@ public:
   bool visible, anchored, canCollide;
   int zIndex;
   std::string texPath;
+  CollisionGroup collisionGroup;
+  CollisionGroup collisionMask;
 protected:
   virtual drawInfo* beforeDrawing();
   virtual void afterDrawing(drawInfo* info);
   virtual void beforeUpdate();
   virtual void afterUpdate();
+  virtual void collisionCallback(Object* object, 
+                                 glm::vec2 bestAxis, 
+                                 float minOverlap,
+                                 glm::vec2 WH,
+                                 glm::vec2 WHb);
 
   std::vector<Object*> lastCollides;
   glm::vec3 colorChange;
   glm::vec2 lastCorrection;
   float gravity;
-  bool pendingDelete;
-  CollisionGroup collisionGroup;
-  CollisionGroup collisionMask;
+  bool pendingDelete; 
 private:
   static std::vector<Object*> registerQueue;
   static std::map<int, std::vector<Object*>> objects;

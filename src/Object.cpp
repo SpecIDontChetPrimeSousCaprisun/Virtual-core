@@ -762,6 +762,39 @@ void Object::draw() {
 
 void Object::beforeUpdate() {}
 void Object::afterUpdate() {}
+void Object::collisionCallback(Object* object, 
+                               glm::vec2 bestAxis, 
+                               float minOverlap,
+                               glm::vec2 WH,
+                               glm::vec2 WHb) {
+  glm::vec2 correction = bestAxis * minOverlap;
+  glm::vec2 centerA = position + WH;
+  glm::vec2 centerB = object->position + WHb;
+
+  glm::vec2 dir = centerA - centerB;
+
+  if (glm::dot(dir, bestAxis) < 0.0f) correction = -correction;
+
+  if (object->anchored) {
+    position += correction;
+    lastCorrection = correction;
+  } else {
+    position += correction * 0.5f;
+    object->position -= correction * 0.5f;
+    lastCorrection = correction * 0.5f;
+    object->lastCorrection = correction * 0.5f;
+  }
+
+  float vn = glm::dot(linearVelocity, bestAxis);
+
+  if (vn < 0.0f)
+      linearVelocity -= vn * bestAxis;
+
+  float ovn = glm::dot(object->linearVelocity, bestAxis);
+
+  if (ovn < 0.0f)
+      object->linearVelocity -= ovn * bestAxis;
+}
 
 void Object::update() {
   beforeUpdate();
@@ -869,34 +902,11 @@ void Object::update() {
 
             if (!object->canCollide) continue;
 
-            glm::vec2 correction = bestAxis * minOverlap;
-            glm::vec2 centerA = position + WH;
-            glm::vec2 centerB = object->position + WHb;
-
-            glm::vec2 dir = centerA - centerB;
-
-            if (glm::dot(dir, bestAxis) < 0.0f)
-                correction = -correction;
-
-            if (object->anchored) {
-              position += correction;
-              lastCorrection = correction;
-            } else {
-              position += correction * 0.5f;
-              object->position -= correction * 0.5f;
-              lastCorrection = correction * 0.5f;
-              object->lastCorrection = correction * 0.5f;
-            }
-
-            float vn = glm::dot(linearVelocity, bestAxis);
-
-            if (vn < 0.0f)
-                linearVelocity -= vn * bestAxis;
-
-            float ovn = glm::dot(object->linearVelocity, bestAxis);
-
-            if (ovn < 0.0f)
-                object->linearVelocity -= ovn * bestAxis;
+            collisionCallback(object,
+                              bestAxis,
+                              minOverlap,
+                              WH,
+                              WHb);
           } 
         }
       }

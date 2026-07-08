@@ -19,6 +19,8 @@ public:
   glm::vec2 size;
 protected:
   void beforeUpdate() override;
+  virtual void use();
+  virtual void itemUpdate();
 private:
   void initObject();
 

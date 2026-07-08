@@ -4,5 +4,7 @@ enum class CollisionGroup {
   Default,
   Player,
   Item,
-  Enemy
+  Enemy,
+  Bullet,
+  Particle
 };

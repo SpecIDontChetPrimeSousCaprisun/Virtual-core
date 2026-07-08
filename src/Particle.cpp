@@ -7,6 +7,7 @@ Particle::Particle(glm::vec2 position, glm::vec2 size, float transparency, std::
                    glm::vec2 direction, float spread, float lifetime) 
   : Object(position, size, transparency, texPath, 999999), direction(direction), spread(spread), lifetime(lifetime) {
   anchored = false;
+  collisionGroup = CollisionGroup::Particle;
 
   std::uniform_real_distribution<float> dist(-spread, spread);
 
@@ -17,6 +18,7 @@ Particle::Particle(glm::vec2 position, glm::vec2 size, float transparency, glm::
                    glm::vec2 direction, float spread, float lifetime) 
   : Object(position, size, transparency, color, 999999), direction(direction), spread(spread), lifetime(lifetime) {
   anchored = false;
+  collisionGroup = CollisionGroup::Particle;
 
   std::uniform_real_distribution<float> dist(-spread, spread);
  

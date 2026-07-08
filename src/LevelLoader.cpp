@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "KillBox.h"
 #include "Enemy.h"
+#include "Gun.h"
 
 #include <fstream>
 
@@ -95,6 +96,9 @@ Object* LevelLoader::parseEntry(json entry) {
                      entry.at("isCurrentPlayer").get<bool>());
   } else if (type == "Item") {
     obj = new Item(position, size, transparency, texture, zIndex,
+                   entry.at("name").get<std::string>());
+  } else if (type == "Gun") {
+    obj = new Gun(position, size, transparency, texture, zIndex,
                    entry.at("name").get<std::string>());
   } else if (type == "KillBox" || type == "Killbox") {
     obj = new KillBox(position, size, zIndex);

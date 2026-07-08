@@ -37,6 +37,13 @@ void Item::update() {
 }
 
 void Item::beforeUpdate() {
+  itemUpdate();
+
+  if (equippedItem == this) {
+    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) use();
+    return;
+  }
+
   double mouseX;
   double mouseY;
 
@@ -66,3 +73,7 @@ void Item::equip() {
   equippedItem = this;
   std::cout << "Equiped !\n";
 }
+
+void Item::use() {}
+
+void Item::itemUpdate() {}
