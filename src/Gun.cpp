@@ -22,8 +22,17 @@ void Gun::init() {
 
 void Gun::use() {
   if (lastShot <= 0.0f) {
+    double mouseX;
+    double mouseY;
+
+    glfwGetCursorPos(Window::window, &mouseX, &mouseY);
+
+    position = Player::currentPlayer->position;
+
+    drawInfo* info = beforeDrawing();
+
     lastShot = firerate;
-    Bullet* bullet = new Bullet(Player::currentPlayer->position, glm::vec2(-1.0f, -1.0f), zIndex);
+    Bullet* bullet = new Bullet(Player::currentPlayer->position, glm::vec2(mouseX, mouseY) - info->position, zIndex);
     bullet->registerObject();
   }
 }

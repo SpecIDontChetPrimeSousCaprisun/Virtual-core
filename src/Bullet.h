@@ -9,6 +9,7 @@ public:
   glm::vec2 direction;
   float damage;
   float muzzleVel;
+  float time;
 protected:
   void beforeUpdate() override;
   void afterUpdate() override;
