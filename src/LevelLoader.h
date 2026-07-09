@@ -13,10 +13,10 @@ public:
   static std::vector<Object*> loadLevel(std::string path);
   static std::vector<Object*> addLevel(std::string path);
   static void clearCurrentLevel();
+
+  static std::vector<Object*> currentLevel;
 private:
   static std::vector<Object*> loadProceduralLevel(std::string path);
   static std::vector<Object*> loadStaticLevel(std::string path);
-  static Object* parseEntry(json entry);
-
-  static std::vector<Object*> currentLevel;
+  static Object* parseEntry(json entry); 
 };

@@ -7,10 +7,12 @@ public:
   Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex);
 
   float damage, speed, cooldown;
+
+  void takeDamage(float dmg);
 protected:
   void beforeUpdate() override;
 private:
   bool shouldMoveToPlayer();
 
-  float lastAttack;
+  float lastAttack, health, maxHealth;
 };

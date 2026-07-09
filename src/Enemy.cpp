@@ -1,12 +1,15 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Window.h"
+
 #include <cmath>
 
 Enemy::Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex) 
   : Object(position, size, 0.0f, texPath, zIndex), damage(10.0f), speed(100.0f), cooldown(1.0f), lastAttack(0.0f) {
   canCollide = true;
   anchored = false;
+  maxHealth = 100;
+  health = maxHealth;
   collisionGroup = CollisionGroup::Enemy;
 }
 
@@ -64,4 +67,11 @@ bool Enemy::shouldMoveToPlayer() {
       Player::currentPlayer->currentGround != resultL) shouldMove = false;
 
   return shouldMove;
+}
+
+void Enemy::takeDamage(float dmg) {
+  health = std::min(health - dmg, maxHealth);
+  if (health <= 0) {
+    pendDelete();
+  }
 }

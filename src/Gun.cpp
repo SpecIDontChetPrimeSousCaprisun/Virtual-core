@@ -29,7 +29,7 @@ void Gun::init() {
 }
 
 void Gun::use() {
-  if (lastShot <= 0.0f) {
+  if (lastShot <= 0.0f && bullets > 0) {
     double mouseX;
     double mouseY;
 
@@ -40,6 +40,7 @@ void Gun::use() {
     drawInfo* info = beforeDrawing();
 
     lastShot = firerate;
+    bullets -= 1;
     Bullet* bullet = new Bullet(Player::currentPlayer->position, glm::vec2(mouseX, mouseY) - info->position, zIndex);
     bullet->registerObject();
   }

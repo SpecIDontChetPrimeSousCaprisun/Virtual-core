@@ -2,6 +2,8 @@
 #include "FileLoader.h"
 #include "Window.h"
 #include "Player.h"
+#include "LevelLoader.h"
+
 #include <cmath>
 
 unsigned int Object::shaderProgram = 0;
@@ -19,6 +21,17 @@ drawInfo::drawInfo(glm::vec2 position, glm::vec2 size)
   : position(position), size(size) {}
 
 void Object::deletePendingObjects() {
+  for (auto it = LevelLoader::currentLevel.begin(); it != LevelLoader::currentLevel.end(); ) {
+    Object* object = *it;
+
+    if (object->pendingDelete) {
+      it = LevelLoader::currentLevel.erase(it);
+    }
+    else {
+      ++it;
+    }
+  }
+
   for (auto& [zIndex, objectsVector] : objects) {
     for (auto it = objectsVector.begin(); it != objectsVector.end(); ) {
       Object* object = *it;
@@ -840,7 +853,6 @@ void Object::update() {
       for (auto& [zIndex, objectsVector] : objects) {
         for (Object* object : objectsVector) {
           if (object == this) continue;
-          if (object->collisionGroup != collisionMask) continue;
 
           float aRadians = rotation * glm::pi<float>() / 180.0f;
 
@@ -901,6 +913,7 @@ void Object::update() {
             object->lastCollides.push_back(this);
 
             if (!object->canCollide) continue;
+            if (object->collisionGroup != collisionMask) continue;
 
             collisionCallback(object,
                               bestAxis,

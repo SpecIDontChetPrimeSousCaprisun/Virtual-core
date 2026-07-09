@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Window.h"
+#include "Player.h"
 
 Bullet::Bullet(glm::vec2 position, glm::vec2 direction, int zIndex) : 
         direction(direction), damage(10.0f), muzzleVel(1000.0f), time(0.0f),
@@ -10,7 +11,7 @@ Bullet::Bullet(glm::vec2 position, glm::vec2 direction, int zIndex) :
   linearVelocity = glm::normalize(direction) * muzzleVel;
   rotation = glm::degrees(std::atan2(direction.y, direction.x));
   anchored = false;
-  canCollide = false;
+  canCollide = true;
 }
 
 void Bullet::beforeUpdate() {
@@ -22,6 +23,7 @@ void Bullet::beforeUpdate() {
 
 void Bullet::afterUpdate() {
   for (Object* obj : lastCollides) {
+    if (!obj->canCollide) continue;
     if (obj->collisionGroup == CollisionGroup::Default) {
       pendDelete();
       break;
@@ -31,6 +33,7 @@ void Bullet::afterUpdate() {
 
     if (!enemy) continue;
 
+    enemy->takeDamage(damage);
     pendDelete();
     break;
   }
