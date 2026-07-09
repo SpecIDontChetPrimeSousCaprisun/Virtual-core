@@ -89,6 +89,7 @@ void Inventory::update() {
 
   if (!visible) {
     hoverEffect->visible = false;
+    sideUi->changeVisibility(false);
     selectedItem = nullptr;
     return;
   }

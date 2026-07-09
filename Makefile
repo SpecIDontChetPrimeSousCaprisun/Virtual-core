@@ -57,8 +57,8 @@ LIBS_LINUX = \
 -lm
 
 LIBS_WINDOWS = \
--L/usr/x86_64-w64-mingw32/lib \
--lglfw3 \
+-L$(MINGW_GLFW)/lib \
+-lglfw3dll \
 -lopengl32 \
 -lgdi32 \
 -lwinmm
@@ -133,6 +133,8 @@ windows:
 	-o $(WIN_TARGET) \
 	$(LIBS_WINDOWS) \
 	-mwindows
+
+	cp $(MINGW_GLFW)/bin/glfw3.dll publish/windows/
 
 web:	
 	mkdir -p publish/web
