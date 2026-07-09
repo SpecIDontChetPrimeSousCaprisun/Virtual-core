@@ -49,6 +49,11 @@ void Gun::use() {
 void Gun::itemUpdate() {
   lastShot = std::max((float)(lastShot - Window::deltaTime), 0.0f);
 
+  if (glfwGetKey(Window::window, GLFW_KEY_R) == GLFW_PRESS) {
+    lastShot = 1.0f;
+    bullets = maxBullets;
+  }
+
   if (Item::equippedItem == nullptr) return;
 
   Gun* gun = dynamic_cast<Gun*>(Item::equippedItem);
