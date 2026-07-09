@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Window.h"
+#include "Gun.h"
 
 #include <cmath>
 
@@ -11,6 +12,10 @@ Enemy::Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex
   maxHealth = 100;
   health = maxHealth;
   collisionGroup = CollisionGroup::Enemy;
+  item = new Gun(position, size, 0.0f, "textures/box.png", zIndex, "Enemy weapon");
+  item->visible = false;
+  item->specialOwner = this;
+  item->registerObject();
 }
 
 void Enemy::beforeUpdate() {
@@ -19,7 +24,10 @@ void Enemy::beforeUpdate() {
   if (shouldMoveToPlayer()) {
     if (Player::currentPlayer->position.x - position.x < 1) linearVelocity.x = -speed;
     else linearVelocity.x = speed;
-  } else linearVelocity.x = 0;
+  } else {
+    linearVelocity.x = 0;
+    item->use();
+  }
 
   lastAttack -= Window::deltaTime;
 
@@ -61,7 +69,7 @@ bool Enemy::shouldMoveToPlayer() {
     ignore
   );
 
-  if (glm::distance(Player::currentPlayer->position.x, position.x) < 75) shouldMove = false;
+  if (glm::distance(Player::currentPlayer->position.x, position.x) < 250) shouldMove = false;
   if (Player::currentPlayer->currentGround != resultR &&
       Player::currentPlayer->currentGround != result &&
       Player::currentPlayer->currentGround != resultL) shouldMove = false;

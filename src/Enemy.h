@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Object.h"
+#include "Item.h"
 
 class Enemy : public Object {
 public:
   Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex);
 
   float damage, speed, cooldown;
+  Item* item;
 
   void takeDamage(float dmg);
 protected:

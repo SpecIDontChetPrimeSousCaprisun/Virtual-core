@@ -3,8 +3,7 @@ let
   mingw = pkgs.pkgsCross.mingwW64;
 in
   pkgs.mkShell {
-    nativeBuildInputs = with pkgs.buildPackages; [
-      gcc
+    nativeBuildInputs = with pkgs.buildPackages; [ 
       glfw
       xorg.libX11
       xorg.libXrandr

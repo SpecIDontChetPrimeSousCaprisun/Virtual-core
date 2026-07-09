@@ -14,12 +14,13 @@ public:
   static Item* equippedItem;
 
   virtual void equip();
+  virtual void use();
 
   std::string name;
   glm::vec2 size;
+  Object* specialOwner;
 protected:
   void beforeUpdate() override;
-  virtual void use();
   virtual void itemUpdate();
 private:
   void initObject();

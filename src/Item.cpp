@@ -7,12 +7,12 @@ bool Item::wasSelected;
 Item* Item::equippedItem = nullptr;
 
 Item::Item(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name) 
-  : Object(position, size, transparency, texPath, zIndex), name(name) {
+  : Object(position, size, transparency, texPath, zIndex), name(name), specialOwner(nullptr) {
   initObject();
 }
 
 Item::Item(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex, std::string name) 
-  : Object(position, size, transparency, color, zIndex), name(name) {
+  : Object(position, size, transparency, color, zIndex), name(name), specialOwner(nullptr) {
   initObject();
 }
 

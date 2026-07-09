@@ -35,24 +35,29 @@ void Gun::use() {
 
     glfwGetCursorPos(Window::window, &mouseX, &mouseY);
 
-    position = Player::currentPlayer->position;
+    if (specialOwner != nullptr) position = specialOwner->position;
+    else position = Player::currentPlayer->position;
 
     drawInfo* info = beforeDrawing();
 
     lastShot = firerate;
     bullets -= 1;
-    Bullet* bullet = new Bullet(Player::currentPlayer->position, glm::vec2(mouseX, mouseY) - info->position, zIndex);
+    Bullet* bullet;
+
+    if (specialOwner != nullptr) {
+      bullet = new Bullet(specialOwner->position, Player::currentPlayer->position - specialOwner->position, zIndex);
+      bullet->damageTarget = "player";
+    } else bullet = new Bullet(Player::currentPlayer->position, glm::vec2(mouseX, mouseY) - info->position, zIndex);
+
     bullet->registerObject();
+  } else if (specialOwner != nullptr && bullets <= 0) {
+    lastShot = 1.0f;
+    bullets = maxBullets;
   }
 }
 
 void Gun::itemUpdate() {
-  lastShot = std::max((float)(lastShot - Window::deltaTime), 0.0f);
-
-  if (glfwGetKey(Window::window, GLFW_KEY_R) == GLFW_PRESS) {
-    lastShot = 1.0f;
-    bullets = maxBullets;
-  }
+  lastShot = std::max((float)(lastShot - Window::deltaTime), 0.0f); 
 
   if (Item::equippedItem == nullptr) return;
 
@@ -60,6 +65,11 @@ void Gun::itemUpdate() {
   ammoText->visible = gun != nullptr;
 
   if (gun == this) {
+    if (glfwGetKey(Window::window, GLFW_KEY_R) == GLFW_PRESS) {
+      lastShot = 1.0f;
+      bullets = maxBullets;
+    }
+
     std::ostringstream stream;
     stream << bullets << " / " << maxBullets;
     ammoText->text = stream.str();
