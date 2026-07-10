@@ -22,6 +22,7 @@ uniform vec3 color;
 uniform bool useColor;
 uniform bool flipH;
 uniform bool flipV;
+uniform float baseLight;
 
 void main() { 
   vec2 pixelPos = TexCoord * objectSize;
@@ -61,6 +62,7 @@ void main() {
   }
 
   vec4 finalColor;
+  vec3 totalLight = vec3(baseLight);
 
   if (useColor) {
     finalColor = vec4(color, 1);
@@ -71,7 +73,6 @@ void main() {
     finalColor = texture2D(tex, flipedCoords);
   }
 
-  vec3 totalLight = vec3(0.005); // ambient — pure black looks bad
   vec2 fragWorldPos = objectWorldPos + TexCoord * objectWorldSize;
 
   for (int i = 0; i < lightCount; i++) {

@@ -33,6 +33,7 @@ public:
   virtual ~Object();
 
   static bool blurry;
+  static float baseLighting;
 
   static void initShader();
   static void recreateBlurTexture();

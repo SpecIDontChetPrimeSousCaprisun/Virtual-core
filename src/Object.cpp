@@ -15,6 +15,7 @@ unsigned int Object::blurVAO = 0;
 unsigned int Object::blurVBO = 0;
 unsigned int Object::sceneTexture = 0;
 bool Object::blurry = false;
+float Object::baseLighting = 1.0f;
 std::vector<Object*> Object::registerQueue;
 std::map<int, std::vector<Object*>> Object::objects;
 
@@ -58,6 +59,10 @@ void Object::drawAll() {
 
   glUseProgram(shaderProgram);
   glUniform1i(glGetUniformLocation(shaderProgram, "lightCount"), Light::lights.size());
+  glUniform1f(
+    glGetUniformLocation(shaderProgram, "baseLight"), 
+    baseLighting
+  );
 
   int i = 0;
 

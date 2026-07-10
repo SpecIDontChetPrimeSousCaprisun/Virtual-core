@@ -1,6 +1,7 @@
 #include "Item.h"
 #include "Window.h"
 #include "Inventory.h"
+#include "Player.h"
 
 TextElement* Item::interactionElement;
 bool Item::wasSelected;
@@ -38,18 +39,29 @@ void Item::update() {
 
 void Item::beforeUpdate() {
   itemUpdate();
-
-  if (equippedItem == this) {
-    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) use();
-    return;
-  }
+  canCollide = !(equippedItem == this);
+  anchored = equippedItem == this;
 
   double mouseX;
   double mouseY;
 
   glfwGetCursorPos(Window::window, &mouseX, &mouseY);
-
   drawInfo* info = beforeDrawing();
+
+  if (equippedItem == this) {
+    if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) use();
+    glm::vec2 dir = glm::vec2(mouseX, mouseY) - info->position;
+
+    position = Player::currentPlayer->position + (Player::currentPlayer->size / 2.0f) - (info->size / 2.0f);
+    rotation = glm::degrees(std::atan2(dir.y, dir.x));
+    std::cout << rotation << "\n";
+    if (rotation > 90 || rotation < -90) {
+      rotation -= 180;
+      flipH = true;
+    } else flipH = false;
+
+    return;
+  } 
 
   if (mouseX >= info->position.x &&
       mouseX <= info->position.x + info->size.x &&
@@ -71,7 +83,7 @@ void Item::beforeUpdate() {
 
 void Item::equip() {
   equippedItem = this;
-  std::cout << "Equiped !\n";
+  visible = true;
 }
 
 void Item::use() {}
