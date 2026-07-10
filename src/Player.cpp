@@ -141,8 +141,10 @@ void Player::update() {
 
   if (glfwGetKey(Window::window, GLFW_KEY_D) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
     currentPlayer->linearVelocity.x = 250.0f * currentPlayer->speedMult;
+    currentPlayer->flipH = false;
   } else if (glfwGetKey(Window::window, GLFW_KEY_A) == GLFW_PRESS && currentPlayer->state != "wallJumping") {
     currentPlayer->linearVelocity.x = -250.0f * currentPlayer->speedMult;
+    currentPlayer->flipH = true;
   } else if (currentPlayer->state != "wallJumping" && (currentPlayer->linearVelocity.x == -250.0f || currentPlayer->linearVelocity.x == 250.0f)) {
     currentPlayer->linearVelocity.x = 0.0f;
   }

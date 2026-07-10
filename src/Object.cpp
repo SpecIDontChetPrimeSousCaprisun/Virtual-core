@@ -639,6 +639,8 @@ void Object::init() {
   parallaxFactor = 1.0f;
   collisionGroup = CollisionGroup::Default;
   collisionMask = CollisionGroup::Default;
+  flipH = false;
+  flipV = false;
 }
 
 void Object::registerObject() {
@@ -788,11 +790,25 @@ void Object::draw() {
     0
   );
 
-  glUniform2f(glGetUniformLocation(shaderProgram, "objectWorldPos"),
-            position.x, position.y);
+  glUniform2f(
+    glGetUniformLocation(shaderProgram, "objectWorldPos"),
+    position.x, position.y
+  );
 
-  glUniform2f(glGetUniformLocation(shaderProgram, "objectWorldSize"),
-            size.x, size.y);
+  glUniform2f(
+    glGetUniformLocation(shaderProgram, "objectWorldSize"),
+    size.x, size.y
+  );
+
+  glUniform1i(
+    glGetUniformLocation(shaderProgram, "flipH"),
+    flipH ? 1 : 0
+  );
+
+  glUniform1i(
+    glGetUniformLocation(shaderProgram, "flipV"),
+    flipV ? 1 : 0
+  );
 
   // ===== DRAW =====
   glBindVertexArray(VAO);
