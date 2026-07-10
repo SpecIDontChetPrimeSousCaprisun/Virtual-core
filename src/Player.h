@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "UIElement.h"
+#include "Light.h"
 
 class Player : public Object {
 public:
@@ -28,4 +29,5 @@ private:
   float health;
   float lastJump;
   std::string state;
+  Light* light;
 };

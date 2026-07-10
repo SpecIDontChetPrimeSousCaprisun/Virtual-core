@@ -3,6 +3,16 @@ precision mediump float;
 
 varying vec2 TexCoord;
 
+#define MAX_LIGHTS 16
+
+uniform vec2 lightPositions[MAX_LIGHTS];
+uniform vec3 lightColors[MAX_LIGHTS];
+uniform float lightRadii[MAX_LIGHTS];
+uniform float lightIntensities[MAX_LIGHTS];
+uniform int lightCount;
+
+uniform vec2 objectWorldPos;
+uniform vec2 objectWorldSize;
 uniform vec2 objectSize;
 uniform float cornerRadius;
 uniform float alpha;
@@ -55,6 +65,22 @@ void main() {
   } else {
     finalColor = texture2D(tex, TexCoord);
   }
+
+  vec3 totalLight = vec3(0.005); // ambient — pure black looks bad
+  vec2 fragWorldPos = objectWorldPos + TexCoord * objectWorldSize;
+
+  for (int i = 0; i < lightCount; i++)
+  {
+      float dist = distance(fragWorldPos, lightPositions[i]);
+
+      // attenuation: light fades to 0 at the radius
+      float attenuation = clamp(1.0 - (dist / lightRadii[i]), 0.0, 1.0);
+      attenuation = attenuation * attenuation; // square it for a nicer falloff
+
+      totalLight += lightColors[i] * lightIntensities[i] * attenuation;
+  }
+
+  finalColor = finalColor * vec4(totalLight, 1.0);
 
   gl_FragColor = vec4(
       finalColor.rgb + colorChange,

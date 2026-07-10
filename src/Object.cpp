@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Player.h"
 #include "LevelLoader.h"
+#include "Light.h"
 
 #include <cmath>
 
@@ -53,6 +54,31 @@ void Object::drawAll() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glViewport(0, 0, Window::fbWidth, Window::fbHeight);
+  }
+
+  glUseProgram(shaderProgram);
+  glUniform1i(glGetUniformLocation(shaderProgram, "lightCount"), Light::lights.size());
+
+  int i = 0;
+
+  for (Light* light : Light::lights) {
+    std::string base = "lightPositions[" + std::to_string(i) + "]";
+    glUniform2f(glGetUniformLocation(shaderProgram, base.c_str()),
+                light->position.x, light->position.y);
+    
+    base = "lightColors[" + std::to_string(i) + "]";
+    glUniform3f(glGetUniformLocation(shaderProgram, base.c_str()),
+                light->color.x, light->color.y, light->color.z);
+
+    base = "lightRadii[" + std::to_string(i) + "]";
+    glUniform1f(glGetUniformLocation(shaderProgram, base.c_str()),
+                light->radius);
+
+    base = "lightIntensities[" + std::to_string(i) + "]";
+    glUniform1f(glGetUniformLocation(shaderProgram, base.c_str()),
+                light->intensity);
+
+    i++;
   }
 
   for (auto& [zIndex, objectsVector] : objects) {
@@ -761,6 +787,12 @@ void Object::draw() {
     glGetUniformLocation(shaderProgram, "tex"),
     0
   );
+
+  glUniform2f(glGetUniformLocation(shaderProgram, "objectWorldPos"),
+            position.x, position.y);
+
+  glUniform2f(glGetUniformLocation(shaderProgram, "objectWorldSize"),
+            size.x, size.y);
 
   // ===== DRAW =====
   glBindVertexArray(VAO);

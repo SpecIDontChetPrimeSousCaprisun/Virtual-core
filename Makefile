@@ -91,7 +91,8 @@ COMMON_SRC = \
 	src/KillBox.cpp \
 	src/DeathScreen.cpp \
 	src/Gun.cpp \
-	src/Bullet.cpp
+	src/Bullet.cpp \
+	src/Light.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)

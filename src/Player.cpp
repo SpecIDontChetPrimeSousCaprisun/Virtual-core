@@ -18,6 +18,7 @@ Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::stri
   anchored = false;
   canCollide = true;
   collisionGroup = CollisionGroup::Player;
+  light = new Light(position, glm::vec3(0.25f, 0.25f, 0.25f), 175, 2.0);
 
   if (isCurrentPlayer) currentPlayer = this;
 }
@@ -170,6 +171,7 @@ void Player::setHealth(float health) {
 }
 
 void Player::beforeUpdate() {
+  light->position = position + (size / 2.0f);
   colorChange.x = std::max(
       colorChange.x - (float)Window::deltaTime,
       0.0f
