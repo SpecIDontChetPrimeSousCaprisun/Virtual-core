@@ -3,6 +3,7 @@
 #include "FileLoader.h"
 
 unsigned int TextElement::shaderProgram = 0;
+std::vector<TextElement*> TextElement::elements;
 
 void TextElement::initShader() {
   // already initialized
@@ -122,8 +123,14 @@ void TextElement::initShader() {
   std::cout << "Text shader initialized\n";
 }
 
+void TextElement::reloadAllFonts() {
+  for (TextElement* element : elements) {
+    element->reloadFont(element->fontPath);
+  }
+}
+
 TextElement::TextElement(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string text, std::string fontPath, glm::vec3 textColor)
-  : UIElement(position, size, transparency, texPath, zIndex), text(text), font(Font::getFont(fontPath, size.y * Window::fbHeight)), textColor(textColor), textCentered(true), textWidth(0.0f), textTransparency(0.0f) {
+  : UIElement(position, size, transparency, texPath, zIndex), text(text), font(Font::getFont(fontPath, size.y * Window::fbHeight)), textColor(textColor), textCentered(true), textWidth(0.0f), textTransparency(0.0f), fontPath(fontPath) {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -141,10 +148,11 @@ TextElement::TextElement(glm::vec2 position, glm::vec2 size, float transparency,
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
+  elements.push_back(this);
 }
 
 TextElement::TextElement(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex, std::string text, std::string fontPath, glm::vec3 textColor)
-  : UIElement(position, size, transparency, color, zIndex), text(text), font(Font::getFont(fontPath, size.y * Window::fbHeight)), textColor(textColor), textCentered(true), textWidth(0.0f), textTransparency(0.0f) {
+  : UIElement(position, size, transparency, color, zIndex), text(text), font(Font::getFont(fontPath, size.y * Window::fbHeight)), textColor(textColor), textCentered(true), textWidth(0.0f), textTransparency(0.0f), fontPath(fontPath) {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -162,6 +170,17 @@ TextElement::TextElement(glm::vec2 position, glm::vec2 size, float transparency,
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
+  elements.push_back(this);
+}
+
+TextElement::~TextElement() {
+  elements.erase(
+      std::remove(elements.begin(), elements.end(), this),
+      elements.end()
+  );
+
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
 }
 
 drawInfo* TextElement::baseTextBeforeDrawing() {
@@ -334,4 +353,5 @@ void TextElement::recalculateTextWidth() {
 
 void TextElement::reloadFont(std::string fontPath) {
   font = Font::getFont(fontPath, size.y * Window::fbHeight);
+  this->fontPath = fontPath;
 }

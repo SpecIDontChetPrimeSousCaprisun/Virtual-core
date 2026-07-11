@@ -142,7 +142,7 @@ void Intro::init() {
   std::vector<Object*> uiElements;
 
   TextElement* title = new TextElement(glm::vec2(0.0f, 0.0f),
-                                      glm::vec2(1.0f, 0.2f),
+                                      glm::vec2(1.0f, 0.07f),
                                       1.0f,
                                       glm::vec3(0.0f, 0.0f, 0.0f),
                                       2,
@@ -151,7 +151,7 @@ void Intro::init() {
                                       glm::vec3(1.0f, 1.0f, 1.0f));
   
   Button* startButton = new Button(glm::vec2(0.0f, 0.6f),
-                                  glm::vec2(1.0f, 0.075f),
+                                  glm::vec2(1.0f, 0.0625f),
                                   1.0f,
                                   glm::vec3(0.0f, 0.0f, 0.0f),
                                   2,
@@ -160,7 +160,7 @@ void Intro::init() {
                                   glm::vec3(1.0f, 1.0f, 1.0f));
 
   Button* continueButton = new Button(glm::vec2(0.0f, 0.675f),
-                                  glm::vec2(1.0f, 0.075f),
+                                  glm::vec2(1.0f, 0.0625f),
                                   1.0f,
                                   glm::vec3(0.0f, 0.0f, 0.0f),
                                   2,
@@ -169,7 +169,7 @@ void Intro::init() {
                                   glm::vec3(1.0f, 1.0f, 1.0f));
 
   Button* quitButton = new Button(glm::vec2(0.0f, 0.75f),
-                                  glm::vec2(1.0f, 0.075f),
+                                  glm::vec2(1.0f, 0.0625f),
                                   1.0f,
                                   glm::vec3(0.0f, 0.0f, 0.0f),
                                   2,

@@ -154,6 +154,7 @@ void Window::updateFrame() {
 
   if (fbWidth != oldFbWidth || fbHeight != oldFbHeight) {
     Object::recreateBlurTexture();
+    TextElement::reloadAllFonts();
   }
 
   if (fbWidth == 0 || fbHeight == 0) {
