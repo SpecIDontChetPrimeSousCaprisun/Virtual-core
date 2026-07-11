@@ -121,7 +121,7 @@ void Player::update() {
     currentPlayer->linearVelocity.x = 0.0f;
   }
 
-  if ((result || resultR || resultL) && currentPlayer->linearVelocity.y > 500.0f && !dealtFallDamage) {
+  if ((result || resultR || resultL) && currentPlayer->linearVelocity.y > 650.0f && !dealtFallDamage) {
     dealtFallDamage = true;
     Health::dealDmgToBodyPart("left foot", currentPlayer->linearVelocity.y / 50.0f, true);
     Health::dealDmgToBodyPart("right foot", currentPlayer->linearVelocity.y / 50.0f, false);
