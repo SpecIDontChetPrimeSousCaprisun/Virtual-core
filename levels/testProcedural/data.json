@@ -1,0 +1,6 @@
+{
+  "procedural": true,
+  "poolSize": 3,
+  "minLength": 5,
+  "maxLength": 7
+}

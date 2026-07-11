@@ -1,0 +1,77 @@
+{
+  "endPos": [
+    1000,
+    0
+  ],
+  "objects": [
+    {
+      "type": "Object",
+      "position": [
+        -500,
+        500
+      ],
+      "size": [
+        1000,
+        1000
+      ],
+      "transparency": 0,
+      "texture": "textures/Wallpaper.jpeg",
+      "zIndex": 1,
+      "canCollide": true,
+      "anchored": true,
+      "parallaxFactor": 1
+    },
+    {
+      "type": "Killbox",
+      "position": [
+        300,
+        0
+      ],
+      "size": [
+        100,
+        50
+      ],
+      "transparency": 0,
+      "texture": "textures/box.png",
+      "zIndex": 3,
+      "canCollide": false,
+      "anchored": true,
+      "parallaxFactor": 1
+    },
+    {
+      "type": "Object",
+      "position": [
+        -750,
+        250
+      ],
+      "size": [
+        1500,
+        1500
+      ],
+      "transparency": 0,
+      "texture": "textures/Wallpaper.jpeg",
+      "zIndex": -1,
+      "canCollide": false,
+      "anchored": true,
+      "parallaxFactor": 5
+    },
+    {
+      "type": "Gun",
+      "position": [
+        150,
+        0
+      ],
+      "size": [
+        50,
+        25
+      ],
+      "transparency": 0,
+      "texture": "textures/Gun.png",
+      "zIndex": 3,
+      "name": "test gun",
+      "canCollide": true,
+      "anchored": false,
+      "parallaxFactor": 1
+    }
+  ]
+}

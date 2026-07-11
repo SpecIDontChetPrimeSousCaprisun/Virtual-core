@@ -193,7 +193,7 @@ void Intro::init() {
     ui->changeVisibility(false);
     background->visible = false;
     
-    LevelLoader::loadLevel("levels/testLevel");
+    LevelLoader::loadLevel("levels/testProcedural");
   });
 
   continueButton->textCentered = false;

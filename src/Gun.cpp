@@ -44,10 +44,19 @@ void Gun::use() {
     bullets -= 1;
     Bullet* bullet;
 
+    // direction vector from rotation
+    float radians = glm::radians(rotation);
+    glm::vec2 forward = glm::vec2(std::cos(radians), std::sin(radians));
+
+    // muzzle is at the right edge of the gun, centered vertically
+    glm::vec2 gunCenter = position + size / 2.0f;
+    glm::vec2 muzzleOffset = forward * (size.x / 2.0f);
+    glm::vec2 muzzlePos = gunCenter + muzzleOffset;
+
     if (specialOwner != nullptr) {
       bullet = new Bullet(specialOwner->position, Player::currentPlayer->position - specialOwner->position, zIndex);
       bullet->damageTarget = "player";
-    } else bullet = new Bullet(Player::currentPlayer->position, glm::vec2(mouseX, mouseY) - info->position, zIndex);
+    } else bullet = new Bullet(muzzlePos, glm::vec2(mouseX, mouseY) - info->position, zIndex);
 
     bullet->registerObject();
   } else if (specialOwner != nullptr && bullets <= 0) {

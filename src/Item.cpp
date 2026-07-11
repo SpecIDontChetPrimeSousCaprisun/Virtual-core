@@ -54,7 +54,7 @@ void Item::beforeUpdate() {
 
     position = Player::currentPlayer->position + (Player::currentPlayer->size / 2.0f) - (info->size / 2.0f);
     rotation = glm::degrees(std::atan2(dir.y, dir.x));
-    std::cout << rotation << "\n";
+    
     if (rotation > 90 || rotation < -90) {
       rotation -= 180;
       flipH = true;

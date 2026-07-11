@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <random>
 
 #include "Object.h"
 
@@ -16,7 +17,9 @@ public:
 
   static std::vector<Object*> currentLevel;
 private:
-  static std::vector<Object*> loadProceduralLevel(std::string path);
-  static std::vector<Object*> loadStaticLevel(std::string path);
+  static std::vector<Object*> loadProceduralLevel(std::string path, json);
+  static std::vector<Object*> loadStaticLevel(json);
   static Object* parseEntry(json entry); 
+
+  static std::mt19937 rng;
 };
