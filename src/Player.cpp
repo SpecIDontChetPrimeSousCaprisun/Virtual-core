@@ -13,12 +13,13 @@ UIElement* Player::healthBar;
 UIElement* Player::healthBarBackground;
 bool Player::dealtFallDamage = false;
 
-Player::Player(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, bool isCurrentPlayer) 
-  : Object(position, size, transparency, texPath, zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f), speedMult(1.0f) {
+Player::Player(glm::vec2 position, glm::vec2 size, float transparency, int zIndex, bool isCurrentPlayer) 
+  : AnimatedObject(position, size, transparency, "textures/testAnim", zIndex), health(100), maxHealth(100), state("idle"), lastJump(0.0f), speedMult(1.0f) {
   anchored = false;
   canCollide = true;
   collisionGroup = CollisionGroup::Player;
   light = new Light(position, glm::vec3(0.25f, 0.25f, 0.25f), 175, 2.0);
+  isPlaying = true;
 
   if (isCurrentPlayer) currentPlayer = this;
 }
@@ -172,7 +173,7 @@ void Player::setHealth(float health) {
   this->health = health;
 }
 
-void Player::beforeUpdate() {
+void Player::afterTextureUpdate() {
   light->position = position + (size / 2.0f);
   colorChange.x = std::max(
       colorChange.x - (float)Window::deltaTime,

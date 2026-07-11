@@ -11,13 +11,6 @@ TARGET = game
 WIN_TARGET = publish/windows/game.exe
 WEB_TARGET = publish/web/index.html
 
-WINDOWS_DLLS = /usr/x86_64-w64-mingw32/usr/bin/glfw3.dll \
-							 /usr/x86_64-w64-mingw32/bin/libgcc_s_seh-1.dll \
-							 /usr/x86_64-w64-mingw32/bin/libssp-0.dll \
-							 /usr/x86_64-w64-mingw32/bin/libstdc++-6.dll \
-							 /usr/x86_64-w64-mingw32/bin/zlib1.dll \
-							 /usr/x86_64-w64-mingw32/bin/libwinpthread-1.dll
-
 # Flags
 CXXFLAGS = -std=c++17 -Iinclude
 WINDOWS_CXXFLAGS = -std=c++17 -Iinclude \
@@ -92,7 +85,8 @@ COMMON_SRC = \
 	src/DeathScreen.cpp \
 	src/Gun.cpp \
 	src/Bullet.cpp \
-	src/Light.cpp
+	src/Light.cpp \
+	src/AnimatedObject.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)

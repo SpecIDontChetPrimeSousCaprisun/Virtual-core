@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Object.h"
+#include "AnimatedObject.h"
 #include "UIElement.h"
 #include "Light.h"
 
-class Player : public Object {
+class Player : public AnimatedObject {
 public:
-  Player(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, bool isCurrentPlayer);
+  Player(glm::vec2 position, glm::vec2 size, float transparency, int zIndex, bool isCurrentPlayer);
   
   static void update();
 
@@ -22,7 +22,7 @@ public:
   float speedMult;
   Object* currentGround;
 protected:
-  void beforeUpdate() override;
+  void afterTextureUpdate() override;
 private:
   static bool dealtFallDamage;
 

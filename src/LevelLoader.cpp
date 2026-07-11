@@ -142,7 +142,7 @@ Object* LevelLoader::parseEntry(json entry) {
   if (type == "Object") {
     obj = new Object(position, size, transparency, texture, zIndex);
   } else if (type == "Player") {
-    obj = new Player(position, size, transparency, texture, zIndex,
+    obj = new Player(position, size, transparency, zIndex,
                      entry.at("isCurrentPlayer").get<bool>());
   } else if (type == "Item") {
     obj = new Item(position, size, transparency, texture, zIndex,

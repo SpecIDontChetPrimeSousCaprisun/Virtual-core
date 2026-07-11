@@ -77,7 +77,9 @@ protected:
   glm::vec3 colorChange;
   glm::vec2 lastCorrection;
   float gravity;
-  bool pendingDelete; 
+  bool pendingDelete;
+  unsigned int texture;
+  bool usesColor;
 private:
   static std::vector<Object*> registerQueue;
   static std::map<int, std::vector<Object*>> objects;
@@ -85,8 +87,7 @@ private:
 
   static void deletePendingObjects();
 
-  unsigned int VAO, VBO, texture; 
-  bool usesColor;
+  unsigned int VAO, VBO; 
 
   void init();
   void update();
