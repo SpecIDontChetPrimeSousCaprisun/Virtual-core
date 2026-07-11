@@ -18,7 +18,6 @@
       "texture": "textures/Wallpaper.jpeg",
       "zIndex": 1,
       "canCollide": true,
-      "anchored": true,
       "parallaxFactor": 1
     },
     {

@@ -8,6 +8,7 @@
 #include "Gun.h"
 
 #include <fstream>
+#include <sstream>
 
 std::vector<Object*> LevelLoader::currentLevel;
 std::mt19937 LevelLoader::rng(std::random_device{}());
@@ -131,10 +132,10 @@ Object* LevelLoader::parseEntry(json entry) {
   glm::vec2 size = glm::vec2(entry["size"][0], entry["size"][1]);
   float transparency = entry.value("transparency", 0.0f);
   std::string texture = entry.at("texture").get<std::string>();
-  int zIndex = entry.at("zIndex").get<int>();
-  bool canCollide = entry.at("canCollide").get<bool>();
-  bool anchored = entry.at("anchored").get<bool>();
-  float parallax = entry.at("parallaxFactor").get<float>();
+  int zIndex = entry.value("zIndex", 0);
+  bool canCollide = entry.value("canCollide", false);
+  bool anchored = entry.value("anchored", true);
+  float parallax = entry.value("parallaxFactor", 1.0f);
 
   Object* obj = nullptr;
 
