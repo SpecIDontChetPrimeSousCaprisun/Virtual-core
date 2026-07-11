@@ -19,14 +19,11 @@ AnimatedObject::AnimatedObject(glm::vec2 position, glm::vec2 size, float transpa
   std::string format = info.value("format", ".png");
   int textureAmount = info["frameAmount"];
 
-  std::cout << textureAmount << "\n";
-
   for (int i = 0; i < textureAmount; i++) {
     std::ostringstream ss;
 
     ss << animPath << "/frames/" << i << format;
 
-    std::cout << ss.str() << "\n";
     textures.push_back(FileLoader::loadTexture(ss.str()));
   }
 

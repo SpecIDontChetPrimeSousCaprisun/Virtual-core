@@ -24,6 +24,8 @@ public:
 
   unsigned int texture;
   int ascent, descent, lineGap;
+  int BITMAP_W;
+  int BITMAP_H;
   float scale, height;
   stbtt_fontinfo fontInfo;
 

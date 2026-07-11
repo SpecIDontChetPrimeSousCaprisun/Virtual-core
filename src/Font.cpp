@@ -15,36 +15,26 @@ bool FontInfo::operator<(const FontInfo& other) const {
 Font::Font(const std::string& path, float pixelHeight) {
   ttfBuffer = FileLoader::loadFontFile(path);
 
-  const int BITMAP_W = 512;
-  const int BITMAP_H = 512;
+  BITMAP_W = std::max(512, (int)pixelHeight * 16);
+  BITMAP_H = std::max(512, (int)pixelHeight * 16);
 
   unsigned char* bitmap = new unsigned char[BITMAP_W * BITMAP_H];
 
-  stbtt_BakeFontBitmap(
-      ttfBuffer.data(),
-      0,
-      pixelHeight,
-      bitmap,
-      BITMAP_W,
-      BITMAP_H,
-      32,
-      96,
-      cdata
+  int result = stbtt_BakeFontBitmap(
+    ttfBuffer.data(), 0, pixelHeight,
+    bitmap, BITMAP_W, BITMAP_H,
+    32, 96, cdata
   );
+
+  if (result <= 0) std::cout << "Warning: font bitmap too small, " << -result << " glyphs didn't fit\n";
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
   glTexImage2D(
-      GL_TEXTURE_2D,
-      0,
-      GL_ALPHA,
-      BITMAP_W,
-      BITMAP_H,
-      0,
-      GL_ALPHA,
-      GL_UNSIGNED_BYTE,
-      bitmap
+    GL_TEXTURE_2D, 0, GL_ALPHA,
+    BITMAP_W, BITMAP_H, 0,
+    GL_ALPHA, GL_UNSIGNED_BYTE, bitmap
   );
 
   delete[] bitmap;

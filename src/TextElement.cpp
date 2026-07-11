@@ -276,7 +276,7 @@ void TextElement::afterDrawing(drawInfo* info) {
 
     stbtt_GetBakedQuad(
         font->cdata,
-        512, 512,
+        font->BITMAP_W, font->BITMAP_H,
         glyphIndex,
         &x, &y,
         &q,
@@ -330,7 +330,7 @@ void TextElement::recalculateTextWidth() {
 
     stbtt_GetBakedQuad(
         font->cdata,
-        512, 512,
+        font->BITMAP_W, font->BITMAP_H,
         glyphIndex,
         &x, &y,
         &q,
