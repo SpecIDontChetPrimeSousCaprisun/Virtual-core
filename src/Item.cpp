@@ -25,7 +25,7 @@ void Item::initObject() {
 }
 
 void Item::init() {
-  interactionElement = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.1f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1,"ITEM NAME GOES HERE", "fonts/Kenney Future Narrow.ttf", glm::vec3(1.0f, 1.0f, 1.0f));
+  interactionElement = new TextElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.01f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1,"ITEM NAME GOES HERE", "fonts/Kenney Future Narrow.ttf", glm::vec3(1.0f, 1.0f, 1.0f));
 
   interactionElement->visible = false;
   interactionElement->textCentered = false;

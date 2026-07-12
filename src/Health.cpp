@@ -3,6 +3,7 @@
 #include "DeathScreen.h"
 #include "Player.h"
 #include "Particle.h"
+#include "HealingItem.h"
 
 #include <cmath>
 
@@ -174,6 +175,16 @@ void Health::init() {
   for (auto& [name, part] : bodyParts) {
     uiElements.push_back(part);
     bodyPartHealth[name] = 100.0f;
+
+    part->setCallback([name]() {
+      if (HealingItem::equippedHealingItem == nullptr) return;
+
+      bodyPartHealth[name] += HealingItem::equippedHealingItem->healingAmount;
+      HealingItem::equippedHealingItem->visible = false;
+      HealingItem::equippedHealingItem = nullptr;
+      Item::equippedItem = nullptr;
+      updateEffects();
+    });
   }
 
   ui = new Container(uiElements);

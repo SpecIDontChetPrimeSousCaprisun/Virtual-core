@@ -50,6 +50,8 @@ void Object::deletePendingObjects() {
 }
 
 void Object::drawAll() {
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
   if (blurry) {
     glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO);
     glClear(GL_COLOR_BUFFER_BIT);

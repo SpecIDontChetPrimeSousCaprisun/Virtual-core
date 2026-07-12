@@ -74,7 +74,7 @@
       "parallaxFactor": 5
     },
     {
-      "type": "Item",
+      "type": "HealingItem",
       "position": [
         0,
         0
@@ -86,7 +86,7 @@
       "transparency": 0,
       "texture": "textures/player.png",
       "zIndex": 3,
-      "name": "test",
+      "name": "Bandage",
       "canCollide": true,
       "anchored": false,
       "parallaxFactor": 1
