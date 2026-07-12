@@ -85,6 +85,8 @@ void Inventory::update() {
     isPressed = false;
   }
 
+  visible = visible && UIElement::shouldDisplayMenus;
+
   ui->changeVisibility(visible);
 
   if (!visible) {

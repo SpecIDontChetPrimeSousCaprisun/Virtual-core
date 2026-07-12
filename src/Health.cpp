@@ -215,7 +215,12 @@ float lerp(float a, float b, float t) {
 }
 
 void Health::update() {
-  if (glfwGetKey(Window::window, GLFW_KEY_Q) && !playingOpenAnim && !pressed) {
+  if (!UIElement::shouldDisplayMenus) {
+    ui->changeVisibility(false);
+    return;
+  }
+
+  if (glfwGetKey(Window::window, GLFW_KEY_Q) && !playingOpenAnim && !pressed && UIElement::shouldDisplayMenus) {
     pressed = true;
 
     if (background->visible) {

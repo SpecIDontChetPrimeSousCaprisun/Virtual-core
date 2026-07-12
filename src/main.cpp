@@ -34,4 +34,6 @@ int main() {
 
   Window::mainLoop();
   Sound::unInit();
+
+  return 0;
 }

@@ -192,7 +192,8 @@ void Intro::init() {
   startButton->setCallback([]() {
     ui->changeVisibility(false);
     background->visible = false;
-    
+    UIElement::shouldDisplayMenus = true;
+
     LevelLoader::loadLevel("levels/testProcedural");
   });
 

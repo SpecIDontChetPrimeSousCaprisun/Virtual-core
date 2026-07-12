@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "UIElement.h"
 
+bool UIElement::shouldDisplayMenus = false;
+
 UIElement::UIElement(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex)
   : Object(position, size, transparency, texPath, 9999 + zIndex) {
   anchorPoint = glm::vec2(0.0f, 0.0f);

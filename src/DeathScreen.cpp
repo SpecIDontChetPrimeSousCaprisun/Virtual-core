@@ -30,6 +30,7 @@ void DeathScreen::init() {
 }
 
 void DeathScreen::play() {
+  UIElement::shouldDisplayMenus = false;
   background->visible = true;
   LevelLoader::clearCurrentLevel();
   isPlaying = true;

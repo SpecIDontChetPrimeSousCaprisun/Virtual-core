@@ -19,6 +19,7 @@ in
     ];
 
     shellHook = ''
+      exec zsh
       export MINGW_GLFW=${mingw.glfw}
     '';
 }
