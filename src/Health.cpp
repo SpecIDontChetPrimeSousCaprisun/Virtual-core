@@ -179,7 +179,7 @@ void Health::init() {
     part->setCallback([name]() {
       if (HealingItem::equippedHealingItem == nullptr) return;
 
-      bodyPartHealth[name] += HealingItem::equippedHealingItem->healingAmount;
+      bodyPartHealth[name] = std::min(bodyPartHealth[name] + HealingItem::equippedHealingItem->healingAmount, 100.0f);
       HealingItem::equippedHealingItem->visible = false;
       HealingItem::equippedHealingItem = nullptr;
       Item::equippedItem = nullptr;
