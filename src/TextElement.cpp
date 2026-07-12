@@ -352,6 +352,7 @@ void TextElement::recalculateTextWidth() {
 }
 
 void TextElement::reloadFont(std::string fontPath) {
+  delete font;
   font = Font::getFont(fontPath, size.y * Window::fbHeight);
   this->fontPath = fontPath;
 }

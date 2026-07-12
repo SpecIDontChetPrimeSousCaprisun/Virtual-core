@@ -21,6 +21,7 @@ public:
 class Font {
 public: 
   static Font* getFont(const std::string& path, float pixelHeight);
+  virtual ~Font();
 
   unsigned int texture;
   int ascent, descent, lineGap;

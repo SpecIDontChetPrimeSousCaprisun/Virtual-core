@@ -43,14 +43,14 @@ Font::Font(const std::string& path, float pixelHeight) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
 
   if (!stbtt_InitFont(
-        &fontInfo,
+    &fontInfo,
+    ttfBuffer.data(),
+    stbtt_GetFontOffsetForIndex(
         ttfBuffer.data(),
-        stbtt_GetFontOffsetForIndex(
-            ttfBuffer.data(),
-            0
-        )))
+        0
+    )))
   {
-      std::cout << "Failed to init font\n";
+    std::cout << "Failed to init font\n";
   }
 
   stbtt_GetFontVMetrics(
@@ -64,10 +64,6 @@ Font::Font(const std::string& path, float pixelHeight) {
   height = (ascent - descent) * scale;
 
   glBindTexture(GL_TEXTURE_2D, 0);
-
-  FontInfo* info = new FontInfo(path, pixelHeight);
-
-  fonts[*info] = this;
 }
 
 Font* Font::getFont(const std::string& path, float pixelHeight) {
@@ -79,4 +75,11 @@ Font* Font::getFont(const std::string& path, float pixelHeight) {
   } else {
     return new Font(path, pixelHeight);
   }
+}
+
+Font::~Font() {
+  glDeleteTextures(1, &texture); // GPU texture
+  // ttfBuffer is a std::vector, cleans itself up automatically
+  // bitmap was already deleted in the constructor
+  // cdata and fontInfo are stack-allocated structs, no cleanup needed
 }
