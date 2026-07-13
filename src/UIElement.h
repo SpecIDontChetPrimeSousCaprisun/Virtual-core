@@ -8,6 +8,7 @@ public:
   UIElement(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex);
 
   static bool shouldDisplayMenus;
+  static bool menuOpened;
 
   glm::vec2 getActualPosition();
   glm::vec2 getActualSize();

@@ -225,12 +225,14 @@ void Health::update() {
 
     if (background->visible) {
       ui->changeVisibility(false);
-    } else {
+      UIElement::menuOpened = false;
+    } else if (!UIElement::menuOpened) {
       background->visible = true;
       background->size = glm::vec2(0.0f, 0.0f);
       playingOpenAnim = true;
       openAnimTime = 0.0f;
       lastCoutText = 0;
+      UIElement::menuOpened = true;
     }
   } else if (!glfwGetKey(Window::window, GLFW_KEY_Q)) {
     pressed = false;

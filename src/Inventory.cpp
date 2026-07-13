@@ -79,8 +79,11 @@ void Inventory::init() {
 
 void Inventory::update() {
   if (glfwGetKey(Window::window, GLFW_KEY_E) == GLFW_PRESS && !isPressed) {
+    if (!visible && UIElement::menuOpened) return;
+
     isPressed = true;
-    visible = !visible; 
+    visible = !visible;
+    UIElement::menuOpened = visible;
   } else if (glfwGetKey(Window::window, GLFW_KEY_E) != GLFW_PRESS) {
     isPressed = false;
   }
