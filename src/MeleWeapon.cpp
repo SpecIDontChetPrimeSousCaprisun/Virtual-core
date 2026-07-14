@@ -13,9 +13,14 @@ MeleWeapon::MeleWeapon(glm::vec2 position, glm::vec2 size, float transparency, g
 
 void MeleWeapon::use() {
   if (hitTime > 0.0f) return;
-  
+ 
+  glm::vec2 pos;
+
+  if (Player::currentPlayer->flipH) pos = Player::currentPlayer->position - (Player::currentPlayer->size * glm::vec2(1.0f, 0.0f));
+  else pos = Player::currentPlayer->position + (Player::currentPlayer->size * glm::vec2(1.0f, 0.0f));
+
   hitTime = cooldown;
-  std::vector<Object*> hits = Object::getAllObjectsInBounds(Player::currentPlayer->position, 
+  std::vector<Object*> hits = Object::getAllObjectsInBounds(pos, 
                                                             Player::currentPlayer->size * glm::vec2(2.0f, 1.0f),
                                                             0.0f);
 
