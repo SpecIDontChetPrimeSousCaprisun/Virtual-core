@@ -52,7 +52,7 @@ void Item::beforeUpdate() {
     if (glfwGetMouseButton(Window::window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) use();
     glm::vec2 dir = glm::vec2(mouseX, mouseY) - info->position;
 
-    position = Player::currentPlayer->position + (Player::currentPlayer->size / 2.0f) - (info->size / 2.0f);
+    position = (Player::currentPlayer->position + (Player::currentPlayer->size / 2.0f) - (info->size / 2.0f)) + (glm::normalize(dir) * (info->size.x / 2.0f));
     rotation = glm::degrees(std::atan2(dir.y, dir.x));
     
     if (rotation > 90 || rotation < -90) {
@@ -61,7 +61,7 @@ void Item::beforeUpdate() {
     } else flipH = false;
 
     return;
-  } 
+  }
 
   if (mouseX >= info->position.x &&
       mouseX <= info->position.x + info->size.x &&
