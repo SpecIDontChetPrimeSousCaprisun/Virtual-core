@@ -22,6 +22,7 @@ void Item::initObject() {
   canCollide = true;
   collisionGroup = CollisionGroup::Item;
   size = glm::vec2(1.0f, 2.0f);
+  specialOwner = nullptr;
 }
 
 void Item::init() {
@@ -53,6 +54,18 @@ void Item::beforeUpdate() {
     glm::vec2 dir = glm::vec2(mouseX, mouseY) - info->position;
 
     position = (Player::currentPlayer->position + (Player::currentPlayer->size / 2.0f) - (info->size / 2.0f)) + (glm::normalize(dir) * (info->size.x / 2.0f));
+    rotation = glm::degrees(std::atan2(dir.y, dir.x));
+    
+    if (rotation > 90 || rotation < -90) {
+      rotation -= 180;
+      flipH = true;
+    } else flipH = false;
+
+    return;
+  } else if (specialOwner != nullptr) {
+    glm::vec2 dir = specialOwner->flipH ? glm::vec2(-1.0f, 0.0f) : glm::vec2(1.0f, 0.0f);
+
+    position = (specialOwner->position + (specialOwner->size / 2.0f) - (info->size / 2.0f)) + (glm::normalize(dir) * (info->size.x / 2.0f));
     rotation = glm::degrees(std::atan2(dir.y, dir.x));
     
     if (rotation > 90 || rotation < -90) {

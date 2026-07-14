@@ -13,10 +13,9 @@ Enemy::Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex
   maxHealth = 100;
   health = maxHealth;
   collisionGroup = CollisionGroup::Enemy;
-  /*item = new Gun(position, size, 0.0f, "textures/box.png", zIndex, "Enemy weapon");
-  item->visible = false;
+  item = new Gun(position, glm::vec2(50, 25), 0.0f, "textures/Gun.png", zIndex, "Enemy weapon");
   item->specialOwner = this;
-  item->registerObject();*/
+  item->registerObject();
 }
 
 void Enemy::beforeUpdate() {
