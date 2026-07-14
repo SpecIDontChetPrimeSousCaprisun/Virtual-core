@@ -23,6 +23,12 @@ public:
   bool shouldDraw = true;
 };
 
+struct CollisionResult {
+    bool hit;
+    float minOverlap;
+    glm::vec2 bestAxis;
+};
+
 class Object {
 public:
   Object(const Object&) = delete;
@@ -48,6 +54,8 @@ public:
                           const std::vector<Object*>& ignore,
                           CollisionGroup mask = CollisionGroup::Default
                         );
+  static CollisionResult checkCollision(Object* a, Object* b);
+  static std::vector<Object*> getAllObjectsInBounds(glm::vec2 position, glm::vec2 size, float rotation);
 
   void registerObject();
   void pendDelete();

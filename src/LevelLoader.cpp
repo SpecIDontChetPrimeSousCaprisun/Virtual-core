@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "Gun.h"
 #include "HealingItem.h"
+#include "MeleWeapon.h"
 
 #include <fstream>
 #include <sstream>
@@ -157,6 +158,9 @@ Object* LevelLoader::parseEntry(json entry) {
     obj = new Enemy(position, size, texture, zIndex);
   } else if (type == "HealingItem") {
     obj = new HealingItem(position, size, transparency, texture, zIndex,
+                   entry.at("name").get<std::string>());
+  } else if (type == "MeleWeapon") {
+    obj = new MeleWeapon(position, size, transparency, texture, zIndex,
                    entry.at("name").get<std::string>());
   } else {
     std::cerr << "Error in loading level : " + type + " is not a valid object type.\n";

@@ -2,20 +2,21 @@
 #include "Player.h"
 #include "Window.h"
 #include "Gun.h"
+#include "Particle.h"
 
 #include <cmath>
 
 Enemy::Enemy(glm::vec2 position, glm::vec2 size, std::string texPath, int zIndex) 
-  : Object(position, size, 0.0f, texPath, zIndex), damage(10.0f), speed(100.0f), cooldown(1.0f), lastAttack(0.0f) {
+  : Object(position, size, 0.0f, texPath, zIndex), damage(10.0f), speed(100.0f), cooldown(1.0f), lastAttack(0.0f), item(nullptr) {
   canCollide = true;
   anchored = false;
   maxHealth = 100;
   health = maxHealth;
   collisionGroup = CollisionGroup::Enemy;
-  item = new Gun(position, size, 0.0f, "textures/box.png", zIndex, "Enemy weapon");
+  /*item = new Gun(position, size, 0.0f, "textures/box.png", zIndex, "Enemy weapon");
   item->visible = false;
   item->specialOwner = this;
-  item->registerObject();
+  item->registerObject();*/
 }
 
 void Enemy::beforeUpdate() {
@@ -26,7 +27,7 @@ void Enemy::beforeUpdate() {
     else linearVelocity.x = speed;
   } else {
     linearVelocity.x = 0;
-    item->use();
+    if (item != nullptr) item->use();
   }
 
   lastAttack -= Window::deltaTime;
@@ -79,6 +80,15 @@ bool Enemy::shouldMoveToPlayer() {
 
 void Enemy::takeDamage(float dmg) {
   health = std::min(health - dmg, maxHealth);
+  Particle::createParticles(position, 
+                            glm::vec2(25.0f, 25.0f), 
+                            0.5f, 
+                            glm::vec3(1.0f, 0.0f, 0.0f), 
+                            glm::vec2(0.0f, -100.0f), 
+                            100.0f, 
+                            1.0f, 
+                            10);
+
   if (health <= 0) {
     pendDelete();
   }

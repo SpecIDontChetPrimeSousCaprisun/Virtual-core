@@ -23,6 +23,23 @@
       "parallaxFactor": 1
     },
     {
+      "type": "Enemy",
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        33.3333333333,
+        100
+      ],
+      "transparency": 0,
+      "texture": "textures/player.png",
+      "zIndex": 2,
+      "canCollide": true,
+      "anchored": false,
+      "parallaxFactor": 1
+    },
+    {
       "type": "Object",
       "position": [
         -500,
@@ -105,6 +122,24 @@
       "texture": "textures/Gun.png",
       "zIndex": 3,
       "name": "test gun",
+      "canCollide": true,
+      "anchored": false,
+      "parallaxFactor": 1
+    },
+    {
+      "type": "MeleWeapon",
+      "position": [
+        150,
+        0
+      ],
+      "size": [
+        50,
+        25
+      ],
+      "transparency": 0,
+      "texture": "textures/player.png",
+      "zIndex": 3,
+      "name": "test mele",
       "canCollide": true,
       "anchored": false,
       "parallaxFactor": 1

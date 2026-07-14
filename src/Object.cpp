@@ -864,6 +864,45 @@ void Object::collisionCallback(Object* object,
       object->linearVelocity -= ovn * bestAxis;
 }
 
+CollisionResult Object::checkCollision(Object* a, Object* b) {
+  float aRadians = a->rotation * glm::pi<float>() / 180.0f;
+  glm::vec2 Ax(std::cos(aRadians), std::sin(aRadians));
+  glm::vec2 Ay(-std::sin(aRadians), std::cos(aRadians));
+
+  float bRadians = b->rotation * glm::pi<float>() / 180.0f;
+  glm::vec2 Bx(std::cos(bRadians), std::sin(bRadians));
+  glm::vec2 By(-std::sin(bRadians), std::cos(bRadians));
+
+  glm::vec2 WH(a->size.x / 2, a->size.y / 2);
+  glm::vec2 WHb(b->size.x / 2, b->size.y / 2);
+  glm::vec2 T = (a->position + WH) - (b->position + WHb);
+
+  auto getOverlap = [&](glm::vec2 axis) -> float {
+      float ra = WH.x  * std::abs(glm::dot(Ax, axis)) +
+                  WH.y  * std::abs(glm::dot(Ay, axis));
+      float rb = WHb.x * std::abs(glm::dot(Bx, axis)) +
+                  WHb.y * std::abs(glm::dot(By, axis));
+      return (ra + rb) - std::abs(glm::dot(T, axis));
+  };
+
+  float o1 = getOverlap(Ax);
+  float o2 = getOverlap(Ay);
+  float o3 = getOverlap(Bx);
+  float o4 = getOverlap(By);
+
+  if (o1 <= 0 || o2 <= 0 || o3 <= 0 || o4 <= 0)
+      return { false, 0.0f, glm::vec2(0.0f) };
+
+  float minOverlap = o1;
+  glm::vec2 bestAxis = Ax;
+
+  if (o2 < minOverlap) { minOverlap = o2; bestAxis = Ay; }
+  if (o3 < minOverlap) { minOverlap = o3; bestAxis = Bx; }
+  if (o4 < minOverlap) { minOverlap = o4; bestAxis = By; }
+
+  return { true, minOverlap, bestAxis };
+}
+
 void Object::update() {
   beforeUpdate();
 
@@ -909,73 +948,19 @@ void Object::update() {
         for (Object* object : objectsVector) {
           if (object == this) continue;
 
-          float aRadians = rotation * glm::pi<float>() / 180.0f;
+          CollisionResult result = checkCollision(this, object);
 
-          glm::vec2 Ax(
-            std::cos(aRadians),
-            std::sin(aRadians)
-          );
-
-          glm::vec2 Ay(
-            -std::sin(aRadians),
-            std::cos(aRadians)
-          );
-
-          float bRadians = object->rotation * glm::pi<float>() / 180.0f;
-
-          glm::vec2 Bx(
-            std::cos(bRadians),
-            std::sin(bRadians)
-          );
-
-          glm::vec2 By(
-            -std::sin(bRadians),
-            std::cos(bRadians)
-          );
- 
-          glm::vec2 WH(size.x / 2, size.y / 2);
-          glm::vec2 WHb(object->size.x / 2, object->size.y / 2);
-          glm::vec2 T = (position + WH) - (object->position + WHb);
-
-          auto getOverlap = [&](glm::vec2 axis) -> float {
-            float ra =
-                WH.x * std::abs(glm::dot(Ax, axis)) +
-                WH.y * std::abs(glm::dot(Ay, axis));
-
-            float rb =
-                WHb.x * std::abs(glm::dot(Bx, axis)) +
-                WHb.y * std::abs(glm::dot(By, axis));
-
-            float distance = std::abs(glm::dot(T, axis));
-
-            return (ra + rb) - distance;
-          };
-
-          float o1 = getOverlap(Ax);
-          float o2 = getOverlap(Ay);
-          float o3 = getOverlap(Bx);
-          float o4 = getOverlap(By);
-
-          float minOverlap = o1;
-          glm::vec2 bestAxis = Ax;
-
-          if (o2 < minOverlap) { minOverlap = o2; bestAxis = Ay; }
-          if (o3 < minOverlap) { minOverlap = o3; bestAxis = Bx; }
-          if (o4 < minOverlap) { minOverlap = o4; bestAxis = By; }
-          
-          if (!(o1 <= 0 || o2 <= 0 || o3 <= 0 || o4 <= 0)) {
+          if (result.hit) {
             lastCollides.push_back(object);
             object->lastCollides.push_back(this);
 
             if (!object->canCollide) continue;
             if (object->collisionGroup != collisionMask) continue;
 
-            collisionCallback(object,
-                              bestAxis,
-                              minOverlap,
-                              WH,
-                              WHb);
-          } 
+            glm::vec2 WH(size.x / 2, size.y / 2);
+            glm::vec2 WHb(object->size.x / 2, object->size.y / 2);
+            collisionCallback(object, result.bestAxis, result.minOverlap, WH, WHb);
+          }
         }
       }
     }
@@ -1107,4 +1092,22 @@ void Object::changeTexture(std::string newTexPath) {
   texPath = newTexPath;
   texture = FileLoader::loadTexture(newTexPath);
   usesColor = false;
+}
+
+std::vector<Object*> Object::getAllObjectsInBounds(glm::vec2 position, glm::vec2 size, float rotation) {
+  std::vector<Object*> objsInBounds;
+  Object* tempObj = new Object(position, size, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), 1);
+
+  for (auto& [zIndex, objectsVector] : objects) {
+    for (Object* object : objectsVector) {
+      CollisionResult result = checkCollision(tempObj, object);
+
+      if (result.hit) {
+        objsInBounds.push_back(object);
+      }
+    }
+  }
+
+  delete tempObj;
+  return objsInBounds;
 }
