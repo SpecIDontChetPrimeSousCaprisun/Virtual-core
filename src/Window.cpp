@@ -15,6 +15,7 @@
 #include "Tutorial.h"
 #include "ScrollingElement.h"
 #include "DeathScreen.h"
+#include "Gun.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -168,6 +169,7 @@ void Window::updateFrame() {
 
   Object::registerAll();
 
+  Gun::update();
   Player::update();
   Object::updateAll();
 

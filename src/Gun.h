@@ -2,11 +2,16 @@
 
 #include "Item.h"
 #include "TextElement.h"
+#include "Light.h"
+
+#include <map>
 
 class Gun : public Item {
 public:
   Gun(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name);
   Gun(glm::vec2 position, glm::vec2 size, float transparency, glm::vec3 color, int zIndex, std::string name);
+
+  static void update();
 
   float firerate;
   int bullets;
@@ -19,6 +24,7 @@ private:
 
   static bool initedUi;
   static TextElement* ammoText;
+  static std::map<Light*, float> lights;
 
   void init();
   

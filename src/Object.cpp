@@ -15,7 +15,7 @@ unsigned int Object::blurVAO = 0;
 unsigned int Object::blurVBO = 0;
 unsigned int Object::sceneTexture = 0;
 bool Object::blurry = false;
-float Object::baseLighting = 1.0f;
+float Object::baseLighting = 0.05f;
 std::vector<Object*> Object::registerQueue;
 std::map<int, std::vector<Object*>> Object::objects;
 

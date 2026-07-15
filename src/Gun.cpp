@@ -9,6 +9,7 @@
 
 bool Gun::initedUi = false;
 TextElement* Gun::ammoText = nullptr;
+std::map<Light*, float> Gun::lights;
 
 Gun::Gun(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name) :
   Item(position, size, transparency, texPath, zIndex, name) {
@@ -92,6 +93,9 @@ void Gun::use() {
       hitPoint = glm::vec2(0.0f, 0.0f);
     }
 
+    Light* light = new Light(rayPos, glm::vec3(1.0f, 1.0f, 0.0f), 350.0f, 10);
+    lights[light] = 0.1f;
+
     if (!result) return;
     if (specialOwner != nullptr) {
 
@@ -149,4 +153,19 @@ void Gun::initUi() {
   ammoText->visible = false;
   ammoText->textCentered = false;
   ammoText->registerObject();
+}
+
+void Gun::update() {
+  std::vector<Light*> deletedLights;
+
+  for (auto& [light, time] : lights) {
+    time -= Window::deltaTime;
+    light->intensity = time * 100.0f;
+    if (time <= 0.0f) deletedLights.push_back(light);
+  }
+
+  for (Light* light : deletedLights) {
+    lights.erase(light);
+    delete light;
+  }
 }

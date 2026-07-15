@@ -8,6 +8,7 @@
 class Light {
 public:
   Light(glm::vec2 position, glm::vec3 color, float radius, float intensity);
+  virtual ~Light();
 
   static std::vector<Light*> lights;
 
