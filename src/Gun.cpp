@@ -104,6 +104,17 @@ void Gun::use() {
     Light* light = new Light(rayPos, glm::vec3(1.0f, 1.0f, 0.0f), 350.0f, 10);
     lights[light] = 0.1f;
 
+    Particle* casing = new Particle(position,
+                                    glm::vec2(12.0f, 5.5f),
+                                    0.0f,
+                                    glm::vec3(1.0f, 1.0f, 0.0f),
+                                    glm::vec2(0.0f, -500.0f),
+                                    50.0f,
+                                    10.0f);
+
+    casing->gravity = 1000.0f;
+    casing->registerObject();
+
     if (!result) return;
     if (specialOwner != nullptr) {
 
