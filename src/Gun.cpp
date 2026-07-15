@@ -3,6 +3,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Particle.h"
 
 #include <sstream>
 #include <cmath>
@@ -70,6 +71,7 @@ void Gun::use() {
     glm::vec2 hitPoint;
     float tHit;
     std::vector<Object*> ignore;
+    std::vector<CollisionGroup> masks;
 
     Object* result;
 
@@ -79,7 +81,10 @@ void Gun::use() {
     } else { 
       ignore.push_back(Player::currentPlayer);
       rayPos = position + (glm::normalize(worldDir) * size.x);
-    } 
+      masks.push_back(CollisionGroup::Enemy);
+    }
+
+    masks.push_back(CollisionGroup::Default);
 
     ignore.push_back(this);
     result = Object::raycast(rayPos,
@@ -87,7 +92,7 @@ void Gun::use() {
                              hitPoint,
                              tHit,
                              ignore,
-                             CollisionGroup::Enemy);
+                             masks);
 
     if (!result) {
       hitPoint = glm::vec2(0.0f, 0.0f);
@@ -102,9 +107,15 @@ void Gun::use() {
     } else {
       Enemy* enemy = dynamic_cast<Enemy*>(result);
 
-      if (!enemy) return;
-
-      enemy->takeDamage(10.0f);
+      if (enemy) enemy->takeDamage(10.0f);
+      else Particle::createParticles(hitPoint, 
+                                     glm::vec2(12.0f, 12.0f), 
+                                     0.5f, 
+                                     result->color, 
+                                     glm::vec2(0.0f, -100.0f), 
+                                     100.0f, 
+                                     1.0f, 
+                                     10);
     }
 
     /*if (specialOwner != nullptr) {

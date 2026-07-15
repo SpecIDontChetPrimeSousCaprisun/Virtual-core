@@ -80,7 +80,7 @@ bool Enemy::shouldMoveToPlayer() {
 void Enemy::takeDamage(float dmg) {
   health = std::min(health - dmg, maxHealth);
   Particle::createParticles(position, 
-                            glm::vec2(25.0f, 25.0f), 
+                            glm::vec2(12.0f, 12.0f), 
                             0.5f, 
                             glm::vec3(1.0f, 0.0f, 0.0f), 
                             glm::vec2(0.0f, -100.0f), 

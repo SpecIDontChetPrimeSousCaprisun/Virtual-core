@@ -52,7 +52,7 @@ public:
                           glm::vec2& hitPoint,
                           float& tHit,
                           const std::vector<Object*>& ignore,
-                          CollisionGroup mask = CollisionGroup::Default
+                          std::vector<CollisionGroup> masks = {}
                         );
   static CollisionResult checkCollision(Object* a, Object* b);
   static std::vector<Object*> getAllObjectsInBounds(glm::vec2 position, glm::vec2 size, float rotation);

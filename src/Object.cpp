@@ -975,7 +975,7 @@ Object* Object::raycast(
     glm::vec2& hitPoint,
     float& tHit,
     const std::vector<Object*>& ignore,
-    CollisionGroup mask
+    std::vector<CollisionGroup> masks
 ) {
     Object* closestObject = nullptr;
     float maxDistance = glm::length(direction);
@@ -991,7 +991,19 @@ Object* Object::raycast(
             if (!object->canCollide)
                 continue;
 
-            if (object->collisionGroup != mask) continue;
+            if (masks.empty() && object->collisionGroup != CollisionGroup::Default) continue;
+            else if (!masks.empty()) {
+              bool isInGroups = false;
+
+              for (CollisionGroup collisionGroup : masks) {
+                if (collisionGroup == object->collisionGroup) {
+                  isInGroups = true;
+                  break;
+                }
+              }
+
+              if (!isInGroups) continue;
+            }
 
             // =========================
             // Build OBB basis
