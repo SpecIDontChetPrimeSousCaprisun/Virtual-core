@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Enemy.h"
 
 #include <sstream>
 #include <cmath>
@@ -47,14 +48,67 @@ void Gun::use() {
     Bullet* bullet;
 
     glm::vec2 dir = glm::vec2(mouseX, mouseY) - info->position;
+
+    // screen direction
+    glm::vec2 screenDir = glm::vec2(mouseX, mouseY) - info->position;
+
+    // the camera offset between world and screen
+    glm::vec2 cameraOffset = (Player::currentPlayer->position / parallaxFactor) 
+                            - glm::vec2(Window::fbWidth, Window::fbHeight) / 2.0f
+                            + Player::currentPlayer->size / 2.0f;
+
+    // mouse in world space
+    glm::vec2 mouseWorld = glm::vec2(mouseX, mouseY) + cameraOffset;
+
+    // world direction from gun to mouse
+    glm::vec2 worldDir = mouseWorld - position;
+
     position = oldPos;
 
+    glm::vec2 rayPos;
+    glm::vec2 hitPoint;
+    float tHit;
+    std::vector<Object*> ignore;
+
+    Object* result;
+
     if (specialOwner != nullptr) {
+      ignore.push_back(specialOwner);
+      rayPos = glm::vec2(100000.0f, 100000.0f);
+    } else { 
+      ignore.push_back(Player::currentPlayer);
+      rayPos = position + (glm::normalize(worldDir) * size.x);
+    } 
+
+    ignore.push_back(this);
+    result = Object::raycast(rayPos,
+                             glm::normalize(worldDir) * 9999999999999.0f,
+                             hitPoint,
+                             tHit,
+                             ignore,
+                             CollisionGroup::Enemy);
+
+    if (!result) {
+      hitPoint = glm::vec2(0.0f, 0.0f);
+    }
+
+    if (!result) return;
+    if (specialOwner != nullptr) {
+
+    } else {
+      Enemy* enemy = dynamic_cast<Enemy*>(result);
+
+      if (!enemy) return;
+
+      enemy->takeDamage(10.0f);
+    }
+
+    /*if (specialOwner != nullptr) {
       bullet = new Bullet(specialOwner->position, Player::currentPlayer->position - specialOwner->position, zIndex);
       bullet->damageTarget = "player";
-    } else bullet = new Bullet(position + (glm::normalize(dir) * info->size.x), glm::vec2(mouseX, mouseY) - info->position, zIndex);
+    } else bullet = new Bullet(position + (glm::normalize(dir) * info->size.x), glm::vec2(mouseX, mouseY) - info->position, zIndex);*/
 
-    bullet->registerObject();
+    //bullet->registerObject();
   } else if (specialOwner != nullptr && bullets <= 0) {
     lastShot = 1.0f;
     bullets = maxBullets;

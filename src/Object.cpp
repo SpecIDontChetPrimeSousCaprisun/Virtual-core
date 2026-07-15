@@ -978,7 +978,8 @@ Object* Object::raycast(
     CollisionGroup mask
 ) {
     Object* closestObject = nullptr;
-    float closestT = 1.0f;
+    float maxDistance = glm::length(direction);
+    float closestT = maxDistance;
 
     glm::vec2 dirNorm = glm::normalize(direction);
 
@@ -1028,7 +1029,7 @@ Object* Object::raycast(
             glm::vec2 max( half.x,  half.y);
 
             float tMin = 0.0f;
-            float tMax = 1.0f;
+            float tMax = maxDistance;
 
             for (int i = 0; i < 2; i++) {
 
@@ -1062,7 +1063,7 @@ Object* Object::raycast(
 
             float t = std::max(tMin, 0.0f);
 
-            if (t <= 1.0f && t < closestT) {
+            if (t < closestT) {
                 closestT = t;
                 closestObject = object;
             }
