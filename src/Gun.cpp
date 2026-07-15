@@ -29,6 +29,8 @@ void Gun::init() {
   lastShot = 0.0f;
   maxBullets = 10;
   bullets = maxBullets;
+  barrelHeat = 0.0f;
+  lastParticle = 0.0f;
 }
 
 void Gun::use() {
@@ -47,6 +49,7 @@ void Gun::use() {
 
     lastShot = firerate;
     bullets -= 1;
+    barrelHeat += 1.0f;
     Bullet* bullet;
 
     glm::vec2 dir = glm::vec2(mouseX, mouseY) - info->position;
@@ -131,7 +134,23 @@ void Gun::use() {
 }
 
 void Gun::itemUpdate() {
-  lastShot = std::max((float)(lastShot - Window::deltaTime), 0.0f); 
+  lastShot = std::max((float)(lastShot - Window::deltaTime), 0.0f);
+  barrelHeat = std::max((float)(barrelHeat - Window::deltaTime), 0.0f);
+  lastParticle = std::max((float)(lastParticle - Window::deltaTime), 0.0f);
+
+  if (barrelHeat > 2.0f && lastParticle <= 0.0f) {
+    Particle* particle = new Particle(position,
+                                      glm::vec2(5.0f, 5.0f),
+                                      0.1f,
+                                      glm::vec3(0.1f, 0.1f, 0.1f),
+                                      glm::vec2(0.0f, -100.0f),
+                                      10.0f,
+                                      1.0f);
+
+    particle->gravity = 0.0f;
+    particle->registerObject();
+    lastParticle = 0.05f;
+  }
 
   if (Item::equippedItem == nullptr) return;
 

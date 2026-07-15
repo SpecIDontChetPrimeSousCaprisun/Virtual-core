@@ -65,6 +65,7 @@ public:
   glm::vec2 position, size, linearVelocity;
   glm::vec3 color;
   float transparency, rotation, cornerRadius, parallaxFactor;
+  float gravity;
   bool visible, anchored, canCollide, flipH, flipV;
   int zIndex;
   std::string texPath;
@@ -83,8 +84,7 @@ protected:
 
   std::vector<Object*> lastCollides;
   glm::vec3 colorChange;
-  glm::vec2 lastCorrection;
-  float gravity;
+  glm::vec2 lastCorrection; 
   bool pendingDelete;
   unsigned int texture;
   bool usesColor;

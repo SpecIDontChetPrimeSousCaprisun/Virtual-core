@@ -19,6 +19,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    zsh
     export MINGW_GLFW=${mingw.glfw}
   '';
 }

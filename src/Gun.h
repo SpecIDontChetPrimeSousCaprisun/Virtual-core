@@ -14,6 +14,8 @@ public:
   static void update();
 
   float firerate;
+  float barrelHeat;
+  float lastParticle;
   int bullets;
   int maxBullets;
 protected:
