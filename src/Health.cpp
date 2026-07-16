@@ -346,7 +346,7 @@ void Health::updateEffects() {
   }
 
   if (redEffect && !effect) {
-    effect = new ScreenEffect(glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+    effect = new ScreenEffect(glm::vec3(0.25f, 0.0f, 0.0f), 0.5f);
     effect->registerObject();
   } else if (effect && !redEffect) {
     effect->visible = false;

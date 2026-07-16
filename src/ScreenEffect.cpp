@@ -125,6 +125,26 @@ void ScreenEffect::init() {
 
 drawInfo* ScreenEffect::beforeDrawing() {
   glUseProgram(shaderProgram);
+  glUniform1f(
+      glGetUniformLocation(shaderProgram, "alpha"),
+      1 - transparency
+  );
+
+  glUniform3f(
+      glGetUniformLocation(shaderProgram, "colorChange"),
+      colorChange.x, colorChange.y, colorChange.z
+  );
+
+  glUniform1i(
+      glGetUniformLocation(shaderProgram, "useColor"),
+      usesColor ? 1 : 0
+  );
+
+  glUniform3f(
+      glGetUniformLocation(shaderProgram, "color"),
+      color.x, color.y, color.z
+  );
+
   return new drawInfo(glm::vec2(0.0f, 0.0f), glm::vec2(Window::fbWidth, Window::fbHeight));
 }
 
