@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Particle.h"
 #include "HealingItem.h"
+#include "ScreenEffect.h"
 
 #include <cmath>
 
@@ -303,6 +304,7 @@ void Health::fullyHeal() {
 void Health::updateEffects() {
   bool dead = false;
   bool blur = false;
+  bool redEffect = false;
   float speedMult = 1.0f;
   float inventoryMult = 1.0f;
 
@@ -310,6 +312,7 @@ void Health::updateEffects() {
     dead = true;
   } else if (bodyPartHealth["head"] <= 50) {
     blur = true;
+    redEffect = true;
   }
 
   std::vector<std::string> limbs;
@@ -340,6 +343,11 @@ void Health::updateEffects() {
     fullyHeal();
     DeathScreen::play();
     return;
+  }
+
+  if (redEffect) {
+    ScreenEffect* effect = new ScreenEffect(glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+    effect->registerObject();
   }
 
   Object::blurry = blur;

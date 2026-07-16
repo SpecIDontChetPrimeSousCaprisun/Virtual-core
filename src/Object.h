@@ -72,6 +72,8 @@ public:
   CollisionGroup collisionGroup;
   CollisionGroup collisionMask;
 protected:
+  static unsigned int shaderProgram;
+
   virtual drawInfo* beforeDrawing();
   virtual void afterDrawing(drawInfo* info);
   virtual void beforeUpdate();
@@ -91,7 +93,7 @@ protected:
 private:
   static std::vector<Object*> registerQueue;
   static std::map<int, std::vector<Object*>> objects;
-  static unsigned int shaderProgram, blurShaderProgram, verticalBlurShaderProgram, sceneFBO, blurVAO, blurVBO, sceneTexture; 
+  static unsigned int blurShaderProgram, verticalBlurShaderProgram, sceneFBO, blurVAO, blurVBO, sceneTexture; 
 
   static void deletePendingObjects();
 

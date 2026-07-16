@@ -12,6 +12,7 @@
 #include "EscapeMenu.h"
 #include "Tutorial.h"
 #include "DeathScreen.h"
+#include "ScreenEffect.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -31,6 +32,7 @@ int main() {
   EscapeMenu::init();
   Tutorial::init();
   DeathScreen::init();
+  ScreenEffect::init();
 
   Window::mainLoop();
   Sound::unInit();
