@@ -4,7 +4,6 @@
 #include "Player.h"
 #include "Particle.h"
 #include "HealingItem.h"
-#include "ScreenEffect.h"
 
 #include <cmath>
 
@@ -18,6 +17,7 @@ int Health::lastCoutText = 0;
 std::map<std::string, Button*> Health::bodyParts;
 std::map<std::string, float> Health::bodyPartHealth;
 Container* Health::ui;
+ScreenEffect* Health::effect = nullptr;
 
 void Health::init() {
   std::vector<Object*> uiElements;
@@ -345,9 +345,12 @@ void Health::updateEffects() {
     return;
   }
 
-  if (redEffect) {
-    ScreenEffect* effect = new ScreenEffect(glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
+  if (redEffect && !effect) {
+    effect = new ScreenEffect(glm::vec3(1.0f, 0.0f, 0.0f), 0.0f);
     effect->registerObject();
+  } else if (effect && !redEffect) {
+    effect->visible = false;
+    effect = nullptr;
   }
 
   Object::blurry = blur;

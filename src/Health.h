@@ -4,6 +4,7 @@
 #include "TextElement.h"
 #include "Button.h"
 #include "Container.h"
+#include "ScreenEffect.h"
 
 #include <vector>
 #include <map>
@@ -27,6 +28,7 @@ private:
   static std::map<std::string, Button*> bodyParts;
   static std::map<std::string, float> bodyPartHealth;
   static Container* ui;
+  static ScreenEffect* effect;
 
   static void updateEffects();
 };
