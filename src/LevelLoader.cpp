@@ -8,6 +8,7 @@
 #include "Gun.h"
 #include "HealingItem.h"
 #include "MeleWeapon.h"
+#include "UIElement.h"
 
 #include <fstream>
 #include <sstream>
@@ -46,6 +47,8 @@ std::vector<Object*> LevelLoader::addLevel(std::string path) {
     levelFile >> lvlData;
     level = loadStaticLevel(lvlData);
   }
+
+  level.push_back(new UIElement(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, "textures/ciel.png", -99999));
 
   for (Object* object : level) {
     object->registerObject();
