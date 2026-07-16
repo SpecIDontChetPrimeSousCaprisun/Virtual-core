@@ -10,14 +10,16 @@ uniform vec3 color;
 uniform bool useColor;
 
 void main() {
-  vec2 pixelPos = TexCoord * objectSize;
+  // normalized distance from nearest edge (0 = at edge, 1 = past the border)
+  float dx = min(TexCoord.x, 1.0 - TexCoord.x) / 0.1;
+  float dy = min(TexCoord.y, 1.0 - TexCoord.y) / 0.1;
+  float edgeFactor = min(dx, dy);
 
-  if (TexCoord.x > 0.1 && TexCoord.x < 0.9 && TexCoord.y > 0.1 && TexCoord.y < 0.9) {
-    discard;
-  }
+  // discard center pixels
+  if (edgeFactor >= 1.0) discard;
 
-  gl_FragColor = vec4(
-    color.rgb,
-    1.0
-  );
+  // alpha is 1 at the edge, 0 at the border
+  float alpha = 1.0 - clamp(edgeFactor, 0.0, 1.0);
+
+  gl_FragColor = vec4(color.rgb, alpha);
 }
