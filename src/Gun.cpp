@@ -11,6 +11,7 @@
 bool Gun::initedUi = false;
 TextElement* Gun::ammoText = nullptr;
 std::map<Light*, float> Gun::lights;
+ScreenEffect* Gun::effect = nullptr;
 
 Gun::Gun(glm::vec2 position, glm::vec2 size, float transparency, std::string texPath, int zIndex, std::string name) :
   Item(position, size, transparency, texPath, zIndex, name) {
@@ -132,6 +133,12 @@ void Gun::use() {
                                      10);
     }
 
+    if (glm::distance(hitPoint, Player::currentPlayer->position) <= 200) {
+      if (effect) effect->visible = false;
+      effect = new ScreenEffect(glm::vec3(0.25f, 0.25f, 0.25f), 0.5f);
+      effect->registerObject();
+    }
+
     /*if (specialOwner != nullptr) {
       bullet = new Bullet(specialOwner->position, Player::currentPlayer->position - specialOwner->position, zIndex);
       bullet->damageTarget = "player";
@@ -208,5 +215,9 @@ void Gun::update() {
   for (Light* light : deletedLights) {
     lights.erase(light);
     delete light;
+  }
+
+  if (effect) {
+    effect->transparency = std::min((float)(effect->transparency + (Window::deltaTime * 2.5)), 1.0f);
   }
 }

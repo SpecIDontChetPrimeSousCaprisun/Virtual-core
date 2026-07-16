@@ -3,6 +3,7 @@
 #include "Item.h"
 #include "TextElement.h"
 #include "Light.h"
+#include "ScreenEffect.h"
 
 #include <map>
 
@@ -27,6 +28,7 @@ private:
   static bool initedUi;
   static TextElement* ammoText;
   static std::map<Light*, float> lights;
+  static ScreenEffect* effect;
 
   void init();
   
