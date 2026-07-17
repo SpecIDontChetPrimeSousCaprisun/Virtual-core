@@ -9,6 +9,7 @@
 #include "HealingItem.h"
 #include "MeleWeapon.h"
 #include "UIElement.h"
+#include "BreakableObject.h"
 
 #include <fstream>
 #include <sstream>
@@ -165,6 +166,8 @@ Object* LevelLoader::parseEntry(json entry) {
   } else if (type == "MeleWeapon") {
     obj = new MeleWeapon(position, size, transparency, texture, zIndex,
                    entry.at("name").get<std::string>());
+  } else if (type == "BreakableObject") {
+    obj = new BreakableObject(position, size, transparency, texture, zIndex);
   } else {
     std::cerr << "Error in loading level : " + type + " is not a valid object type.\n";
   }

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Particle.h"
+#include "BreakableObject.h"
 
 #include <sstream>
 #include <cmath>
@@ -121,6 +122,7 @@ void Gun::use() {
 
     } else {
       Enemy* enemy = dynamic_cast<Enemy*>(result);
+      BreakableObject* breakableObj = dynamic_cast<BreakableObject*>(result);
 
       if (enemy) enemy->takeDamage(10.0f);
       else Particle::createParticles(hitPoint, 
@@ -131,6 +133,10 @@ void Gun::use() {
                                      100.0f, 
                                      1.0f, 
                                      10);
+
+      if (breakableObj) {
+        breakableObj->takeDamage(10.0f);
+      }
     }
 
     if (glm::distance(hitPoint, Player::currentPlayer->position) <= 200) {

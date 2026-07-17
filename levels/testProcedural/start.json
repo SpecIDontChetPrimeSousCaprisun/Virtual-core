@@ -57,7 +57,7 @@
       "parallaxFactor": 1
     },
     {
-      "type": "Killbox",
+      "type": "BreakableObject",
       "position": [
         300,
         0
@@ -69,7 +69,7 @@
       "transparency": 0,
       "texture": "textures/box.png",
       "zIndex": 3,
-      "canCollide": false,
+      "canCollide": true,
       "anchored": true,
       "parallaxFactor": 1
     },

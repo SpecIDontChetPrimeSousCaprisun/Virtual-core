@@ -89,7 +89,8 @@ COMMON_SRC = \
 	src/AnimatedObject.cpp \
 	src/HealingItem.cpp \
 	src/MeleWeapon.cpp \
-	src/ScreenEffect.cpp
+	src/ScreenEffect.cpp \
+	src/BreakableObject.cpp
 
 SRC = $(COMMON_SRC) src/glad.c
 WEB_SRC = $(COMMON_SRC)
